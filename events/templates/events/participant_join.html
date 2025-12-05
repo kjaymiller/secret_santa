@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Join {{ event.name }} - Secret Santa{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+            Join Secret Santa Event
+        </h1>
+        <p style="color: var(--soft-gray); font-size: 18px;">
+            You've been invited to participate!
+        </p>
+    </div>
+
+    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
+        <div style="text-align: center; padding: 24px; background: var(--cream); border-radius: 8px; margin-bottom: 24px;">
+            <h2 style="font-size: 28px; font-weight: 600; color: var(--forest-green); margin-bottom: 8px;">
+                {{ event.name }}
+            </h2>
+
+            {% if event.description %}
+                <p style="color: var(--charcoal); margin-bottom: 16px;">
+                    {{ event.description }}
+                </p>
+            {% endif %}
+
+            <div style="display: inline-grid; gap: 12px; text-align: left; margin-top: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">📅</span>
+                    <div>
+                        <strong style="color: var(--charcoal);">Exchange Date:</strong>
+                        <span style="color: var(--soft-gray);">{{ event.exchange_date|date:"l, F d, Y" }}</span>
+                    </div>
+                </div>
+
+                {% if event.budget_limit %}
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 20px;">💰</span>
+                        <div>
+                            <strong style="color: var(--charcoal);">Budget Limit:</strong>
+                            <span style="color: var(--soft-gray);">${{ event.budget_limit }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">👥</span>
+                    <div>
+                        <strong style="color: var(--charcoal);">Participants:</strong>
+                        <span style="color: var(--soft-gray);">{{ event.participants.count }} joined</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="message error" style="margin-bottom: 20px;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <h3 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+                Enter Your Details
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        Your Name <span style="color: var(--deep-red);">*</span>
+                    </label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            {{ form.name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.email.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        Email Address <span style="color: var(--deep-red);">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                        You'll receive your Secret Santa assignment at this email
+                    </p>
+                </div>
+
+                <div>
+                    <label for="{{ form.wishlist.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        Gift Wishlist (Optional)
+                    </label>
+                    {{ form.wishlist }}
+                    {% if form.wishlist.errors %}
+                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            {{ form.wishlist.errors }}
+                        </div>
+                    {% endif %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                        Share some gift ideas to help your Secret Santa
+                    </p>
+                </div>
+
+                <div>
+                    <label for="{{ form.phone_number.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        Phone Number (Optional)
+                    </label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            {{ form.phone_number.errors }}
+                        </div>
+                    {% endif %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                        For SMS notifications (optional)
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px;">
+                <button type="submit" class="btn" style="width: 100%; padding: 16px; font-size: 16px;">
+                    Join Event
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div style="text-align: center; color: var(--soft-gray); font-size: 14px;">
+        <p>After joining, you'll receive a confirmation email with next steps.</p>
+    </div>
+</div>
+
+<style>
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--forest-green);
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+</style>
+{% endblock %}

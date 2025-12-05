@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Your Secret Santa Assignment - {{ assignment.event.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🎁</div>
+        <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+            Your Secret Santa Assignment
+        </h1>
+        <p style="color: var(--soft-gray); font-size: 18px;">
+            {{ assignment.event.name }}
+        </p>
+    </div>
+
+    <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
+        <div style="text-align: center; padding: 32px; background: linear-gradient(135deg, var(--cream) 0%, var(--warm-white) 100%); border-radius: 8px; margin-bottom: 24px; border: 2px solid var(--gold);">
+            <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 12px;">
+                You are buying a gift for...
+            </p>
+            <h2 style="font-size: 42px; font-weight: 700; color: var(--forest-green); margin-bottom: 8px;">
+                {{ assignment.receiver.name }}
+            </h2>
+            <div style="display: inline-block; padding: 8px 16px; background: var(--gold); color: white; border-radius: 20px; font-size: 14px; font-weight: 500;">
+                Keep it secret!
+            </div>
+        </div>
+
+        <div style="background: #fff3cd; padding: 20px; border-radius: 6px; margin-bottom: 24px; border-left: 4px solid #ffc107;">
+            <p style="color: #856404; font-weight: 500; margin-bottom: 8px;">
+                Remember:
+            </p>
+            <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
+                <li>Keep your assignment secret - don't tell anyone!</li>
+                <li>Exchange date: <strong>{{ assignment.event.exchange_date|date:"l, F d, Y" }}</strong></li>
+                {% if assignment.event.budget_limit %}
+                    <li>Budget limit: <strong>${{ assignment.event.budget_limit }}</strong></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if assignment.receiver.wishlist %}
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
+                    Gift Wishlist
+                </h3>
+                <div style="background: var(--cream); padding: 20px; border-radius: 6px;">
+                    <p style="color: var(--charcoal); white-space: pre-wrap; line-height: 1.8;">{{ assignment.receiver.wishlist }}</p>
+                </div>
+            </div>
+        {% else %}
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
+                    Gift Wishlist
+                </h3>
+                <div style="background: var(--cream); padding: 20px; border-radius: 6px;">
+                    <p style="color: var(--soft-gray); font-style: italic;">
+                        {{ assignment.receiver.name }} hasn't added a wishlist yet. Get creative!
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if assignment.receiver.email %}
+            <div>
+                <h3 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
+                    Contact Information
+                </h3>
+                <div style="background: var(--cream); padding: 16px; border-radius: 6px;">
+                    <div style="font-size: 14px; color: var(--soft-gray);">
+                        <strong>Email:</strong>
+                        <a href="mailto:{{ assignment.receiver.email }}" style="color: var(--forest-green); margin-left: 8px;">
+                            {{ assignment.receiver.email }}
+                        </a>
+                    </div>
+                    {% if assignment.receiver.phone_number %}
+                        <div style="font-size: 14px; color: var(--soft-gray); margin-top: 8px;">
+                            <strong>Phone:</strong>
+                            <span style="margin-left: 8px;">{{ assignment.receiver.phone_number }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <p style="color: var(--soft-gray); font-size: 13px; margin-top: 8px;">
+                    Use this to coordinate gift delivery if needed (but keep the secret!)
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--pine); text-align: center;">
+        <p style="color: var(--forest-green); font-size: 15px;">
+            Happy gifting! Remember, the joy is in the surprise.
+        </p>
+    </div>
+
+    <div style="margin-top: 24px; text-align: center;">
+        <a href="{% url 'events:participant-detail' assignment.giver.pk %}" class="btn btn-secondary">
+            Back to My Profile
+        </a>
+    </div>
+</div>
+{% endblock %}

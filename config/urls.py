@@ -9,6 +9,7 @@ from events.views import HomeView
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path(settings.ADMIN_URL, admin.site.urls),
+    path("accounts/", include("allauth.urls")),
     path("events/", include("events.urls")),
 ]
 

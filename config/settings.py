@@ -47,6 +47,9 @@ INSTALLED_APPS = [
 # Third-party apps
 
 INSTALLED_APPS += [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "django_prodserver",
 ]
 
@@ -65,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -167,3 +171,16 @@ PRODUCTION_PROCESSES = {
         "ARGS": {"bind": "0.0.0.0:8000", "workers": "2"},
     }
 }
+
+# Django Allauth Configuration
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# Allauth settings
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"

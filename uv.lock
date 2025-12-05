@@ -68,6 +68,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-allauth"
+version = "65.13.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e0/b7/42a048ba1dedbb6b553f5376a6126b1c753c10c70d1edab8f94c560c8066/django_allauth-65.13.1.tar.gz", hash = "sha256:2af0d07812f8c1a8e3732feaabe6a9db5ecf3fad6b45b6a0f7fd825f656c5a15", size = 1983857, upload-time = "2025-11-20T16:34:40.811Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/98/9d44ae1468abfdb521d651fb67f914165c7812dfdd97be16190c9b1cc246/django_allauth-65.13.1-py3-none-any.whl", hash = "sha256:2887294beedfd108b4b52ebd182e0ed373deaeb927fc5a22f77bbde3174704a6", size = 1787349, upload-time = "2025-11-20T16:34:37.354Z" },
+]
+
+[[package]]
 name = "django-cache-url"
 version = "3.4.5"
 source = { registry = "https://pypi.org/simple" }
@@ -289,6 +302,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "django" },
+    { name = "django-allauth" },
     { name = "django-click" },
     { name = "django-prodserver", extra = ["gunicorn"] },
     { name = "environs", extra = ["django"] },
@@ -307,6 +321,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = "<6.0" },
+    { name = "django-allauth" },
     { name = "django-click" },
     { name = "django-prodserver", extras = ["gunicorn"] },
     { name = "environs", extras = ["django"] },

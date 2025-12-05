@@ -165,10 +165,10 @@
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'events:event-list' %}">My Events</a></li>
                         <li><a href="{% url 'events:event-create' %}">Create Event</a></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a href="{% url 'account_logout' %}">Logout</a></li>
                     {% else %}
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Sign Up</a></li>
+                        <li><a href="{% url 'account_login' %}">Login</a></li>
+                        <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </nav>

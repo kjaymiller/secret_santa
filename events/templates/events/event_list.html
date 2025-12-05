@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}My Events - Secret Santa{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700;">My Events</h1>
+        <a href="{% url 'events:event-create' %}" class="btn">Create New Event</a>
+    </div>
+
+    {% if events %}
+        <div style="display: grid; gap: 20px;">
+            {% for event in events %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--forest-green);">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h2 style="font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;">
+                                <a href="{% url 'events:event-detail' event.pk %}" style="color: var(--forest-green); text-decoration: none;">
+                                    {{ event.name }}
+                                </a>
+                            </h2>
+
+                            {% if event.description %}
+                                <p style="color: var(--soft-gray); margin-bottom: 16px;">{{ event.description|truncatewords:30 }}</p>
+                            {% endif %}
+
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px; color: var(--soft-gray);">
+                                <div>
+                                    <strong>Exchange Date:</strong>
+                                    {{ event.exchange_date|date:"M d, Y" }}
+                                </div>
+                                <div>
+                                    <strong>Participants:</strong>
+                                    {{ event.participants.count }}
+                                </div>
+                                <div>
+                                    <strong>Status:</strong>
+                                    {% if event.is_active %}
+                                        <span style="color: var(--pine);">Active</span>
+                                    {% else %}
+                                        <span style="color: var(--soft-gray);">Inactive</span>
+                                    {% endif %}
+                                </div>
+                                {% if event.assignments_revealed_at %}
+                                    <div>
+                                        <strong>Assignments:</strong>
+                                        <span style="color: var(--pine);">Generated</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div style="margin-top: 12px;">
+                                <strong style="font-size: 14px; color: var(--soft-gray);">Invite Code:</strong>
+                                <code style="background: var(--cream); padding: 4px 8px; border-radius: 4px; font-family: monospace; color: var(--forest-green);">
+                                    {{ event.invite_code }}
+                                </code>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px;">
+                            <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+                                View
+                            </a>
+                            <a href="{% url 'events:event-update' event.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn btn-secondary">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Previous</a>
+                {% endif %}
+
+                <span style="padding: 13px 20px; color: var(--soft-gray);">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Last</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 8px;">
+            <p style="font-size: 18px; color: var(--soft-gray); margin-bottom: 20px;">
+                You haven't created any events yet.
+            </p>
+            <a href="{% url 'events:event-create' %}" class="btn">Create Your First Event</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
