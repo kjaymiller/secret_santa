@@ -1,0 +1,149 @@
+import uuid
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+
+
+class Event(models.Model):
+    """Secret Santa event that participants can join."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organizer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="organized_events",
+    )
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    invite_code = models.CharField(max_length=50, unique=True, db_index=True)
+    budget_max = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    event_date = models.DateField()
+    registration_deadline = models.DateField(blank=True, null=True)
+    assignments_revealed_at = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        """Generate invite code if not set."""
+        if not self.invite_code:
+            # Generate a unique 8-character code
+            self.invite_code = uuid.uuid4().hex[:8].upper()
+        super().save(*args, **kwargs)
+
+
+class Participant(models.Model):
+    """A participant in a Secret Santa event."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participants")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="participations",
+    )
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    wishlist_markdown = models.TextField(blank=True, null=True, help_text="Markdown formatted wishlist")
+    exclusions = models.TextField(blank=True, null=True, help_text="People this participant cannot be assigned to")
+    is_confirmed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(fields=["event", "email"], name="unique_participant_per_event"),
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.event.name})"
+
+
+class Assignment(models.Model):
+    """Assignment of a giver to a receiver in a Secret Santa event."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="assignments")
+    giver = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        related_name="giving_assignments",
+    )
+    receiver = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        related_name="receiving_assignments",
+    )
+    assigned_at = models.DateTimeField(default=timezone.now)
+    is_viewed = models.BooleanField(default=False)
+    viewed_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["assigned_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["event", "giver"], name="unique_giver_per_event"),
+            models.CheckConstraint(
+                check=~models.Q(giver=models.F("receiver")),
+                name="no_self_assignment",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.giver.name} → {self.receiver.name} ({self.event.name})"
+
+    def mark_as_viewed(self):
+        """Mark assignment as viewed and record timestamp."""
+        if not self.is_viewed:
+            self.is_viewed = True
+            self.viewed_at = timezone.now()
+            self.save(update_fields=["is_viewed", "viewed_at"])
+
+
+class NotificationSchedule(models.Model):
+    """Scheduled notification for an event."""
+
+    NOTIFICATION_TYPES = [
+        ("registration_reminder", "Registration Reminder"),
+        ("assignment_reveal", "Assignment Reveal"),
+        ("event_reminder", "Event Reminder"),
+        ("custom", "Custom"),
+    ]
+
+    DELIVERY_METHODS = [
+        ("email", "Email"),
+        ("sms", "SMS"),
+        ("both", "Both"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="notification_schedules")
+    notification_type = models.CharField(max_length=50, choices=NOTIFICATION_TYPES)
+    scheduled_at = models.DateTimeField()
+    message_template = models.TextField(blank=True, null=True)
+    delivery_method = models.CharField(max_length=10, choices=DELIVERY_METHODS, default="email")
+    is_sent = models.BooleanField(default=False)
+    sent_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["scheduled_at"]
+
+    def __str__(self):
+        return f"{self.get_notification_type_display()} for {self.event.name} at {self.scheduled_at}"
+
+    def mark_as_sent(self):
+        """Mark notification as sent and record timestamp."""
+        if not self.is_sent:
+            self.is_sent = True
+            self.sent_at = timezone.now()
+            self.save(update_fields=["is_sent", "sent_at"])
