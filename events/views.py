@@ -74,8 +74,19 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.organizer = self.request.user
+        response = super().form_valid(form)
+
+        # Auto-enroll organizer as a participant
+        Participant.objects.create(
+            event=self.object,
+            user=self.request.user,
+            name=self.request.user.get_full_name() or self.request.user.username,
+            email=self.request.user.email,
+            is_confirmed=True,
+        )
+
         messages.success(self.request, f"Event '{form.instance.name}' created successfully!")
-        return super().form_valid(form)
+        return response
 
     def get_success_url(self):
         return reverse("events:event-detail", kwargs={"pk": self.object.pk})
