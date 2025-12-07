@@ -56,13 +56,13 @@
                 </div>
 
                 <div>
-                    <label for="{{ form.exchange_date.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                    <label for="{{ form.event_date.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
                         Exchange Date <span style="color: var(--deep-red);">*</span>
                     </label>
-                    {{ form.exchange_date }}
-                    {% if form.exchange_date.errors %}
+                    {{ form.event_date }}
+                    {% if form.event_date.errors %}
                         <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.exchange_date.errors }}
+                            {{ form.event_date.errors }}
                         </div>
                     {% endif %}
                     <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
@@ -71,13 +71,13 @@
                 </div>
 
                 <div>
-                    <label for="{{ form.budget_limit.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                    <label for="{{ form.budget_max.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
                         Budget Limit
                     </label>
-                    {{ form.budget_limit }}
-                    {% if form.budget_limit.errors %}
+                    {{ form.budget_max }}
+                    {% if form.budget_max.errors %}
                         <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.budget_limit.errors }}
+                            {{ form.budget_max.errors }}
                         </div>
                     {% endif %}
                     <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
