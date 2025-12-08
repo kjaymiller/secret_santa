@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from .forms import EventForm, NotificationScheduleForm, ParticipantExclusionForm, ParticipantJoinForm, ParticipantUpdateForm
+from .forms import EventForm, InviteCodeForm, NotificationScheduleForm, ParticipantJoinForm, ParticipantUpdateForm
 from .models import Assignment, Event, NotificationSchedule, Participant
 
 
@@ -126,6 +126,25 @@ class EventDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Participant Views
+
+
+class InviteCodeEntryView(View):
+    """Landing page for entering invite code to join an event."""
+
+    def get(self, request):
+        from django.shortcuts import render
+
+        form = InviteCodeForm()
+        return render(request, "events/invite_code_entry.html", {"form": form})
+
+    def post(self, request):
+        from django.shortcuts import render
+
+        form = InviteCodeForm(request.POST)
+        if form.is_valid():
+            invite_code = form.cleaned_data["invite_code"]
+            return redirect("events:join-event", invite_code=invite_code)
+        return render(request, "events/invite_code_entry.html", {"form": form})
 
 
 class ParticipantJoinView(CreateView):

@@ -63,6 +63,8 @@ urlpatterns = [
 
 # Public URLs (no auth required)
 public_urlpatterns = [
+    # Invite code entry landing page
+    path("join/", views.InviteCodeEntryView.as_view(), name="invite-code-entry"),
     # Join event via invite code
     path("join/<str:invite_code>/", views.ParticipantJoinView.as_view(), name="join-event"),
     # Participant management
