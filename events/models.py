@@ -78,6 +78,48 @@ class Participant(models.Model):
         return f"{self.name} ({self.event.name})"
 
 
+class ExclusionGroup(models.Model):
+    """A group of participants who should not be assigned to each other."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="exclusion_groups")
+    name = models.CharField(max_length=100, help_text="Name for this exclusion group (e.g., 'Smith Family', 'Marketing Team')")
+    description = models.TextField(blank=True, null=True, help_text="Optional description of this group")
+    members = models.ManyToManyField(
+        Participant,
+        related_name="exclusion_groups",
+        blank=True,
+        help_text="Participants in this group will not be assigned to give gifts to each other"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(fields=["event", "name"], name="unique_group_name_per_event"),
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.event.name})"
+
+    def apply_exclusions(self):
+        """Apply mutual exclusions between all members of this group."""
+        members = list(self.members.all())
+        for member in members:
+            # Exclude all other members in the group
+            other_members = [m for m in members if m != member]
+            member.exclusions.add(*other_members)
+
+    def remove_exclusions(self):
+        """Remove all exclusions between members of this group."""
+        members = list(self.members.all())
+        for member in members:
+            # Remove exclusions to other members
+            other_members = [m for m in members if m != member]
+            member.exclusions.remove(*other_members)
+
+
 class Assignment(models.Model):
     """Assignment of a giver to a receiver in a Secret Santa event."""
 

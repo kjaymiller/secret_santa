@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Exclusion Group - Secret Santa{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+            {% if form.instance.pk %}Edit{% else %}Create{% endif %} Exclusion Group
+        </h1>
+        <p style="color: var(--soft-gray); font-size: 16px;">
+            {{ event.name }}
+        </p>
+    </div>
+
+    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="message error" style="margin-bottom: 20px;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div style="margin-bottom: 24px;">
+                <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                    Group Name <span style="color: var(--deep-red);">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+                {% if form.name.help_text %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                        {{ form.name.help_text }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label for="{{ form.description.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                    Description (Optional)
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                        {{ form.description.errors }}
+                    </div>
+                {% endif %}
+                {% if form.description.help_text %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                        {{ form.description.help_text }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 12px;">
+                    Group Members <span style="color: var(--deep-red);">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="member-search"
+                    placeholder="Search participants by name or email..."
+                    style="margin-bottom: 12px; padding: 10px; width: 100%; border: 1px solid #ddd; border-radius: 6px;"
+                >
+                <div id="member-list" style="background: var(--cream); padding: 16px; border-radius: 6px; max-height: 400px; overflow-y: auto;">
+                    {{ form.members }}
+                </div>
+                {% if form.members.errors %}
+                    <div style="color: var(--deep-red); font-size: 14px; margin-top: 8px;">
+                        {{ form.members.errors }}
+                    </div>
+                {% endif %}
+                {% if form.members.help_text %}
+                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 8px;">
+                        {{ form.members.help_text }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div style="background: var(--cream); padding: 16px; border-radius: 6px; border-left: 4px solid var(--gold); margin-bottom: 24px;">
+                <p style="color: var(--charcoal); font-size: 14px; margin-bottom: 8px;">
+                    <strong>Note:</strong> When you save this group, all members will automatically be excluded from being assigned to give gifts to each other.
+                </p>
+                <p style="color: var(--charcoal); font-size: 14px;">
+                    For example, if you create a "Smith Family" group with Alice, Bob, and Charlie, none of them will be assigned to give gifts to each other.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a href="{% url 'events:exclusion-group-list' event.pk %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn">
+                    {% if form.instance.pk %}Update{% else %}Create{% endif %} Group
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--forest-green);
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    ul li {
+        margin-bottom: 8px;
+    }
+
+    ul li label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    ul li label:hover {
+        background-color: rgba(0,0,0,0.03);
+    }
+
+    .member-hidden {
+        display: none !important;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('member-search');
+    const memberList = document.getElementById('member-list');
+    const memberItems = memberList.querySelectorAll('li');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+
+        memberItems.forEach(function(item) {
+            const label = item.querySelector('label');
+            if (!label) return;
+
+            const text = label.textContent.toLowerCase();
+
+            if (searchTerm === '' || text.includes(searchTerm)) {
+                item.classList.remove('member-hidden');
+            } else {
+                item.classList.add('member-hidden');
+            }
+        });
+
+        // Show count of visible/total members
+        const visibleCount = Array.from(memberItems).filter(item => !item.classList.contains('member-hidden')).length;
+        const totalCount = memberItems.length;
+
+        // Update placeholder if no results
+        if (visibleCount === 0 && searchTerm !== '') {
+            if (!document.getElementById('no-results')) {
+                const noResults = document.createElement('p');
+                noResults.id = 'no-results';
+                noResults.style.cssText = 'color: var(--soft-gray); text-align: center; padding: 20px; margin: 0;';
+                noResults.textContent = 'No participants found matching "' + searchTerm + '"';
+                memberList.appendChild(noResults);
+            }
+        } else {
+            const noResults = document.getElementById('no-results');
+            if (noResults) {
+                noResults.remove();
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
