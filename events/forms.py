@@ -187,37 +187,3 @@ class ParticipantExclusionForm(forms.ModelForm):
         help_texts = {
             "exclusions": "Select participants this person cannot be assigned to",
         }
-
-
-class ExclusionGroupForm(forms.ModelForm):
-    """Form for creating/editing exclusion groups."""
-
-    def __init__(self, *args, **kwargs):
-        event = kwargs.pop('event', None)
-        super().__init__(*args, **kwargs)
-        if event:
-            # Only show confirmed participants from this event
-            self.fields['members'].queryset = Participant.objects.filter(
-                event=event,
-                is_confirmed=True
-            ).order_by('name')
-
-    class Meta:
-        model = ExclusionGroup
-        fields = ["name", "description", "members"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g., Smith Family, Marketing Team"}),
-            "description": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 2,
-                    "placeholder": "Optional description of this group",
-                }
-            ),
-            "members": forms.CheckboxSelectMultiple(),
-        }
-        help_texts = {
-            "name": "A descriptive name for this exclusion group",
-            "description": "Optional details about this group",
-            "members": "Select all participants who should not be assigned to each other",
-        }
