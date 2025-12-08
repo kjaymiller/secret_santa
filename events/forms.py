@@ -5,6 +5,29 @@ from django.utils import timezone
 from .models import Event, NotificationSchedule, Participant
 
 
+class InviteCodeForm(forms.Form):
+    """Form for entering an event invite code."""
+
+    invite_code = forms.CharField(
+        max_length=8,
+        min_length=8,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter 8-character invite code",
+                "style": "text-transform: uppercase;",
+            }
+        ),
+        help_text="Enter the invite code you received from the event organizer",
+    )
+
+    def clean_invite_code(self):
+        invite_code = self.cleaned_data.get("invite_code", "").upper()
+        if not Event.objects.filter(invite_code=invite_code, is_active=True).exists():
+            raise ValidationError("Invalid or inactive invite code. Please check and try again.")
+        return invite_code
+
+
 class EventForm(forms.ModelForm):
     """Form for creating/updating events."""
 
