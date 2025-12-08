@@ -331,8 +331,10 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
             messages.error(request, "Assignments have already been generated for this event.")
             return redirect("events:event-detail", pk=event_pk)
 
-        # Get confirmed participants
-        participants = list(event.participants.filter(is_confirmed=True))
+        # Get confirmed participants with prefetched exclusions for efficiency
+        participants = list(
+            event.participants.filter(is_confirmed=True).prefetch_related('exclusions')
+        )
 
         if len(participants) < 3:
             messages.error(request, "At least 3 confirmed participants are required to generate assignments.")
@@ -358,19 +360,12 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
         Generate circular assignments with exclusion rules.
         Returns True if successful, False otherwise.
         """
-        # Build exclusion map: participant_id -> set of excluded participant emails (lowercase)
+        # Build exclusion map: participant_id -> set of excluded participant IDs
         exclusion_map = {}
         for participant in participants:
-            if participant.exclusions:
-                # Parse exclusions as comma or newline separated emails
-                excluded_emails = set()
-                for email in participant.exclusions.replace('\n', ',').split(','):
-                    email = email.strip().lower()
-                    if email:
-                        excluded_emails.add(email)
-                exclusion_map[participant.id] = excluded_emails
-            else:
-                exclusion_map[participant.id] = set()
+            # Use prefetch_related for efficiency
+            excluded_ids = set(participant.exclusions.values_list('id', flat=True))
+            exclusion_map[participant.id] = excluded_ids
 
         for attempt in range(max_retries):
             # Shuffle participants
@@ -389,9 +384,9 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
                     valid = False
                     break
 
-                # Check exclusion rules
+                # Check exclusion rules using M2M relationship
                 giver_exclusions = exclusion_map.get(giver.id, set())
-                if receiver.email.lower() in giver_exclusions:
+                if receiver.id in giver_exclusions:
                     valid = False
                     break
 

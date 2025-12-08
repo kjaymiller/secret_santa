@@ -108,9 +108,9 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            {% if participant.exclusions %}
+                            {% if participant.exclusions.exists %}
                                 <div style="margin-top: 4px; color: var(--soft-gray); font-size: 12px;">
-                                    <em>Exclusions: {{ participant.exclusions|truncatewords:5 }}</em>
+                                    <em>Excludes: {% for excluded in participant.exclusions.all|slice:":3" %}{{ excluded.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if participant.exclusions.count > 3 %} and {{ participant.exclusions.count|add:"-3" }} more{% endif %}</em>
                                 </div>
                             {% endif %}
                         </div>
