@@ -38,6 +38,27 @@ urlpatterns = [
         views.ParticipantExclusionManageView.as_view(),
         name="exclusion-manage",
     ),
+    # Exclusion Group URLs
+    path(
+        "<uuid:event_pk>/exclusion-groups/",
+        views.ExclusionGroupListView.as_view(),
+        name="exclusion-group-list",
+    ),
+    path(
+        "<uuid:event_pk>/exclusion-groups/create/",
+        views.ExclusionGroupCreateView.as_view(),
+        name="exclusion-group-create",
+    ),
+    path(
+        "exclusion-groups/<uuid:pk>/edit/",
+        views.ExclusionGroupUpdateView.as_view(),
+        name="exclusion-group-update",
+    ),
+    path(
+        "exclusion-groups/<uuid:pk>/delete/",
+        views.ExclusionGroupDeleteView.as_view(),
+        name="exclusion-group-delete",
+    ),
     # Notification URLs
     path(
         "<uuid:event_pk>/notifications/",

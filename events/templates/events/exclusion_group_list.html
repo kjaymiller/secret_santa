@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Exclusion Groups - {{ event.name }} - Secret Santa{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+        <div>
+            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                Exclusion Groups
+            </h1>
+            <p style="color: var(--soft-gray); font-size: 16px;">
+                {{ event.name }}
+            </p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">
+                Back to Event
+            </a>
+            <a href="{% url 'events:exclusion-group-create' event.pk %}" class="btn">
+                Create Group
+            </a>
+        </div>
+    </div>
+
+    <div style="background: var(--cream); padding: 20px; border-radius: 8px; border-left: 4px solid var(--forest-green); margin-bottom: 30px;">
+        <h3 style="color: var(--forest-green); font-size: 16px; font-weight: 600; margin-bottom: 8px;">
+            What are Exclusion Groups?
+        </h3>
+        <p style="color: var(--charcoal); font-size: 14px; margin-bottom: 8px;">
+            Exclusion groups let you quickly exclude multiple participants from being assigned to each other. Perfect for:
+        </p>
+        <ul style="color: var(--charcoal); font-size: 14px; margin-left: 20px;">
+            <li>Families (e.g., "Smith Family" - spouses, siblings, parents)</li>
+            <li>Couples or romantic partners</li>
+            <li>Departments or teams (if you want cross-team gifting)</li>
+            <li>Close friends who already exchange gifts</li>
+        </ul>
+    </div>
+
+    {% if groups %}
+        <div style="display: grid; gap: 20px;">
+            {% for group in groups %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px;">
+                                {{ group.name }}
+                            </h2>
+                            {% if group.description %}
+                                <p style="color: var(--soft-gray); font-size: 14px;">
+                                    {{ group.description }}
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <a href="{% url 'events:exclusion-group-update' group.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;">
+                                Edit
+                            </a>
+                            <a href="{% url 'events:exclusion-group-delete' group.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; color: var(--deep-red); border-color: var(--deep-red);">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--soft-gray); font-size: 14px;">Members ({{ group.members.count }}):</strong>
+                        <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
+                            {% for member in group.members.all %}
+                                <span style="padding: 4px 12px; background: var(--cream); border-radius: 12px; font-size: 13px; color: var(--charcoal);">
+                                    {{ member.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="background: white; padding: 60px 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
+            <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 20px;">
+                No exclusion groups yet. Create one to quickly exclude groups of participants from each other.
+            </p>
+            <a href="{% url 'events:exclusion-group-create' event.pk %}" class="btn">
+                Create Your First Group
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

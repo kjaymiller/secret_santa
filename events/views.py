@@ -8,8 +8,8 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from .forms import EventForm, InviteCodeForm, NotificationScheduleForm, ParticipantJoinForm, ParticipantUpdateForm
-from .models import Assignment, Event, NotificationSchedule, Participant
+from .forms import EventForm, ExclusionGroupForm, InviteCodeForm, NotificationScheduleForm, ParticipantExclusionForm, ParticipantJoinForm, ParticipantUpdateForm
+from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant
 
 
 # Home Page View
@@ -315,6 +315,121 @@ class ParticipantExclusionManageView(LoginRequiredMixin, View):
                 "participant_forms": participant_forms,
             },
         )
+
+
+# Exclusion Group Views
+
+
+class ExclusionGroupListView(LoginRequiredMixin, ListView):
+    """List all exclusion groups for an event."""
+
+    model = ExclusionGroup
+    template_name = "events/exclusion_group_list.html"
+    context_object_name = "groups"
+
+    def get_queryset(self):
+        event_pk = self.kwargs.get("event_pk")
+        return ExclusionGroup.objects.filter(event__pk=event_pk, event__organizer=self.request.user).prefetch_related('members')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event_pk = self.kwargs.get("event_pk")
+        context["event"] = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
+        return context
+
+
+class ExclusionGroupCreateView(LoginRequiredMixin, CreateView):
+    """Create a new exclusion group."""
+
+    model = ExclusionGroup
+    form_class = ExclusionGroupForm
+    template_name = "events/exclusion_group_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        event_pk = self.kwargs.get("event_pk")
+        kwargs['event'] = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
+        return kwargs
+
+    def form_valid(self, form):
+        event_pk = self.kwargs.get("event_pk")
+        form.instance.event = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
+        response = super().form_valid(form)
+
+        # Apply exclusions between all members
+        self.object.apply_exclusions()
+
+        messages.success(self.request, f"Exclusion group '{self.object.name}' created and exclusions applied!")
+        return response
+
+    def get_success_url(self):
+        return reverse("events:exclusion-group-list", kwargs={"event_pk": self.object.event.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event_pk = self.kwargs.get("event_pk")
+        context["event"] = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
+        return context
+
+
+class ExclusionGroupUpdateView(LoginRequiredMixin, UpdateView):
+    """Update an existing exclusion group."""
+
+    model = ExclusionGroup
+    form_class = ExclusionGroupForm
+    template_name = "events/exclusion_group_form.html"
+
+    def get_queryset(self):
+        return ExclusionGroup.objects.filter(event__organizer=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['event'] = self.object.event
+        return kwargs
+
+    def form_valid(self, form):
+        # Remove old exclusions first
+        self.object.remove_exclusions()
+
+        response = super().form_valid(form)
+
+        # Apply new exclusions
+        self.object.apply_exclusions()
+
+        messages.success(self.request, f"Exclusion group '{self.object.name}' updated and exclusions reapplied!")
+        return response
+
+    def get_success_url(self):
+        return reverse("events:exclusion-group-list", kwargs={"event_pk": self.object.event.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = self.object.event
+        return context
+
+
+class ExclusionGroupDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete an exclusion group."""
+
+    model = ExclusionGroup
+    template_name = "events/exclusion_group_confirm_delete.html"
+
+    def get_queryset(self):
+        return ExclusionGroup.objects.filter(event__organizer=self.request.user)
+
+    def get_success_url(self):
+        return reverse("events:exclusion-group-list", kwargs={"event_pk": self.object.event.pk})
+
+    def form_valid(self, form):
+        # Remove exclusions before deleting the group
+        self.object.remove_exclusions()
+        messages.success(self.request, f"Exclusion group '{self.object.name}' deleted and exclusions removed!")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = self.object.event
+        return context
 
 
 # Assignment Views
