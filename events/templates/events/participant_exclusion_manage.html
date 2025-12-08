@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Exclusions - {{ event.name }} - Secret Santa{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+            Manage Participant Exclusions
+        </h1>
+        <p style="color: var(--soft-gray); font-size: 16px;">
+            {{ event.name }}
+        </p>
+    </div>
+
+    <div style="background: var(--cream); padding: 20px; border-radius: 8px; border-left: 4px solid var(--forest-green); margin-bottom: 30px;">
+        <h3 style="color: var(--forest-green); font-size: 16px; font-weight: 600; margin-bottom: 8px;">
+            How Exclusions Work
+        </h3>
+        <ul style="color: var(--charcoal); font-size: 14px; margin-left: 20px;">
+            <li style="margin-bottom: 4px;">Enter the email addresses of participants who should NOT be assigned to each other</li>
+            <li style="margin-bottom: 4px;">Use commas or new lines to separate multiple email addresses</li>
+            <li style="margin-bottom: 4px;">Email addresses are case-insensitive and matched exactly</li>
+            <li style="margin-bottom: 4px;">Useful for excluding spouses, family members, or close friends</li>
+            <li>Too many exclusions may make it impossible to generate assignments</li>
+        </ul>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+            <div class="message error" style="margin-bottom: 20px;">
+                {{ formset.non_form_errors }}
+            </div>
+        {% endif %}
+
+        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+                Participant Exclusions
+            </h2>
+
+            <div style="display: grid; gap: 20px;">
+                {% for form in formset %}
+                    <div style="padding: 16px; background: var(--cream); border-radius: 6px;">
+                        {{ form.id }}
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: var(--charcoal); font-size: 16px;">
+                                {{ form.instance.name }}
+                            </strong>
+                            <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
+                                ({{ form.instance.email }})
+                            </span>
+                        </div>
+
+                        <div>
+                            <label for="{{ form.exclusions.id_for_label }}" style="display: block; font-weight: 500; color: var(--soft-gray); margin-bottom: 6px; font-size: 14px;">
+                                Cannot be assigned to:
+                            </label>
+                            {{ form.exclusions }}
+                            {% if form.exclusions.errors %}
+                                <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                    {{ form.exclusions.errors }}
+                                </div>
+                            {% endif %}
+                            {% if form.exclusions.help_text %}
+                                <p style="color: var(--soft-gray); font-size: 12px; margin-top: 4px;">
+                                    {{ form.exclusions.help_text }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">
+                Cancel
+            </a>
+            <button type="submit" class="btn">
+                Save All Exclusions
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+        resize: vertical;
+    }
+
+    textarea:focus {
+        outline: none;
+        border-color: var(--forest-green);
+    }
+</style>
+{% endblock %}

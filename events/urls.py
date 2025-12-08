@@ -33,6 +33,11 @@ urlpatterns = [
         views.EventDetailView.as_view(),
         name="participant-list",
     ),
+    path(
+        "<uuid:event_pk>/exclusions/",
+        views.ParticipantExclusionManageView.as_view(),
+        name="exclusion-manage",
+    ),
     # Notification URLs
     path(
         "<uuid:event_pk>/notifications/",

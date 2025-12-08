@@ -93,18 +93,25 @@
                 {% for participant in participants %}
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cream); border-radius: 6px;">
                         <div>
-                            <strong style="color: var(--charcoal);">{{ participant.name }}</strong>
-                            <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
-                                {{ participant.email }}
-                            </span>
-                            {% if participant.is_confirmed %}
-                                <span style="margin-left: 8px; padding: 2px 8px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px;">
-                                    Confirmed
+                            <div>
+                                <strong style="color: var(--charcoal);">{{ participant.name }}</strong>
+                                <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
+                                    {{ participant.email }}
                                 </span>
-                            {% else %}
-                                <span style="margin-left: 8px; padding: 2px 8px; background: var(--soft-gray); color: white; border-radius: 12px; font-size: 11px;">
-                                    Pending
-                                </span>
+                                {% if participant.is_confirmed %}
+                                    <span style="margin-left: 8px; padding: 2px 8px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px;">
+                                        Confirmed
+                                    </span>
+                                {% else %}
+                                    <span style="margin-left: 8px; padding: 2px 8px; background: var(--soft-gray); color: white; border-radius: 12px; font-size: 11px;">
+                                        Pending
+                                    </span>
+                                {% endif %}
+                            </div>
+                            {% if participant.exclusions %}
+                                <div style="margin-top: 4px; color: var(--soft-gray); font-size: 12px;">
+                                    <em>Exclusions: {{ participant.exclusions|truncatewords:5 }}</em>
+                                </div>
                             {% endif %}
                         </div>
                         <div style="display: flex; gap: 8px;">
@@ -159,10 +166,15 @@
         {% endif %}
     </div>
 
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 20px; display: flex; gap: 12px;">
         <a href="{% url 'events:notification-list' event.pk %}" class="btn btn-secondary">
             Manage Notifications
         </a>
+        {% if confirmed_participants.count > 0 %}
+            <a href="{% url 'events:exclusion-manage' event.pk %}" class="btn btn-secondary">
+                Manage Exclusions
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
