@@ -98,6 +98,15 @@ class ParticipantJoinForm(forms.ModelForm):
 class ParticipantUpdateForm(forms.ModelForm):
     """Form for updating participant information."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # Only show other participants from the same event (exclude self)
+            self.fields['exclusions'].queryset = Participant.objects.filter(
+                event=self.instance.event,
+                is_confirmed=True
+            ).exclude(pk=self.instance.pk)
+
     class Meta:
         model = Participant
         fields = ["name", "email", "phone_number", "wishlist_markdown", "exclusions"]
@@ -112,17 +121,11 @@ class ParticipantUpdateForm(forms.ModelForm):
                     "placeholder": "Use markdown to format your wishlist:\n\n- Item 1\n- Item 2\n- Item 3",
                 }
             ),
-            "exclusions": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 3,
-                    "placeholder": "Enter email addresses of people you cannot give gifts to (e.g., spouse@example.com, family@example.com)",
-                }
-            ),
+            "exclusions": forms.CheckboxSelectMultiple(),
         }
         help_texts = {
             "wishlist_markdown": "Use Markdown formatting. Your Secret Santa will see this list.",
-            "exclusions": "Email addresses of people you should not be assigned to (e.g., spouse, close family)",
+            "exclusions": "Select people you should not be assigned to (e.g., spouse, close family)",
         }
 
 
@@ -164,18 +167,23 @@ class NotificationScheduleForm(forms.ModelForm):
 class ParticipantExclusionForm(forms.ModelForm):
     """Form for managing participant exclusions (organizer only)."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # Only show other participants from the same event (exclude self)
+            self.fields['exclusions'].queryset = Participant.objects.filter(
+                event=self.instance.event,
+                is_confirmed=True
+            ).exclude(pk=self.instance.pk)
+            # Use a more compact widget for organizer view
+            self.fields['exclusions'].label_from_instance = lambda obj: f"{obj.name} ({obj.email})"
+
     class Meta:
         model = Participant
         fields = ["exclusions"]
         widgets = {
-            "exclusions": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 2,
-                    "placeholder": "Comma-separated emails (e.g., john@example.com, jane@example.com)",
-                }
-            ),
+            "exclusions": forms.CheckboxSelectMultiple(),
         }
         help_texts = {
-            "exclusions": "Enter email addresses of other participants this person cannot be assigned to",
+            "exclusions": "Select participants this person cannot be assigned to",
         }

@@ -54,7 +54,16 @@ class Participant(models.Model):
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     wishlist_markdown = models.TextField(blank=True, null=True, help_text="Markdown formatted wishlist")
-    exclusions = models.TextField(blank=True, null=True, help_text="Email addresses (comma-separated) of participants this person cannot be assigned to")
+    exclusions_old = models.TextField(
+        blank=True, null=True, help_text="DEPRECATED: Use exclusions ManyToMany field instead"
+    )
+    exclusions = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="excluded_by",
+        blank=True,
+        help_text="Participants this person cannot be assigned to give gifts to",
+    )
     is_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
