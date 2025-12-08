@@ -252,6 +252,71 @@ class ParticipantRemoveView(LoginRequiredMixin, DeleteView):
         return super().form_valid(form)
 
 
+class ParticipantExclusionManageView(LoginRequiredMixin, View):
+    """Manage exclusions for all participants in an event (organizer only)."""
+
+    def get(self, request, event_pk):
+        from django.shortcuts import render
+        from django.forms import modelformset_factory
+
+        event = get_object_or_404(Event, pk=event_pk, organizer=request.user)
+        participants = event.participants.filter(is_confirmed=True).order_by('name')
+
+        ParticipantExclusionFormSet = modelformset_factory(
+            Participant,
+            form=ParticipantExclusionForm,
+            extra=0,
+        )
+
+        formset = ParticipantExclusionFormSet(queryset=participants)
+
+        # Zip participants with forms for template
+        participant_forms = zip(participants, formset)
+
+        return render(
+            request,
+            "events/participant_exclusion_manage.html",
+            {
+                "event": event,
+                "formset": formset,
+                "participant_forms": participant_forms,
+            },
+        )
+
+    def post(self, request, event_pk):
+        from django.shortcuts import render
+        from django.forms import modelformset_factory
+
+        event = get_object_or_404(Event, pk=event_pk, organizer=request.user)
+        participants = event.participants.filter(is_confirmed=True).order_by('name')
+
+        ParticipantExclusionFormSet = modelformset_factory(
+            Participant,
+            form=ParticipantExclusionForm,
+            extra=0,
+        )
+
+        formset = ParticipantExclusionFormSet(request.POST, queryset=participants)
+
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, "Exclusions updated successfully!")
+            return redirect("events:event-detail", pk=event_pk)
+
+        # Zip participants with forms for template
+        participant_forms = zip(participants, formset)
+
+        return render(
+            request,
+            "events/participant_exclusion_manage.html",
+            {
+                "event": event,
+                "formset": formset,
+                "participant_forms": participant_forms,
+            },
+        )
+
+
 # Assignment Views
 
 
@@ -293,6 +358,20 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
         Generate circular assignments with exclusion rules.
         Returns True if successful, False otherwise.
         """
+        # Build exclusion map: participant_id -> set of excluded participant emails (lowercase)
+        exclusion_map = {}
+        for participant in participants:
+            if participant.exclusions:
+                # Parse exclusions as comma or newline separated emails
+                excluded_emails = set()
+                for email in participant.exclusions.replace('\n', ',').split(','):
+                    email = email.strip().lower()
+                    if email:
+                        excluded_emails.add(email)
+                exclusion_map[participant.id] = excluded_emails
+            else:
+                exclusion_map[participant.id] = set()
+
         for attempt in range(max_retries):
             # Shuffle participants
             shuffled = participants.copy()
@@ -305,9 +384,14 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
             for i, giver in enumerate(shuffled):
                 receiver = shuffled[(i + 1) % len(shuffled)]
 
-                # Check exclusions (if implemented)
-                # For now, just ensure no self-assignment (already enforced by constraint)
+                # Check for self-assignment (already enforced by database constraint)
                 if giver == receiver:
+                    valid = False
+                    break
+
+                # Check exclusion rules
+                giver_exclusions = exclusion_map.get(giver.id, set())
+                if receiver.email.lower() in giver_exclusions:
                     valid = False
                     break
 

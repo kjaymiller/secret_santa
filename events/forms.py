@@ -116,13 +116,13 @@ class ParticipantUpdateForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Enter names of people you cannot give gifts to (e.g., spouse, family members)",
+                    "placeholder": "Enter email addresses of people you cannot give gifts to (e.g., spouse@example.com, family@example.com)",
                 }
             ),
         }
         help_texts = {
             "wishlist_markdown": "Use Markdown formatting. Your Secret Santa will see this list.",
-            "exclusions": "People you should not be assigned to (e.g., spouse, close family)",
+            "exclusions": "Email addresses of people you should not be assigned to (e.g., spouse, close family)",
         }
 
 
@@ -159,3 +159,23 @@ class NotificationScheduleForm(forms.ModelForm):
         if scheduled_at and scheduled_at < timezone.now():
             raise ValidationError("Scheduled time cannot be in the past.")
         return scheduled_at
+
+
+class ParticipantExclusionForm(forms.ModelForm):
+    """Form for managing participant exclusions (organizer only)."""
+
+    class Meta:
+        model = Participant
+        fields = ["exclusions"]
+        widgets = {
+            "exclusions": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 2,
+                    "placeholder": "Comma-separated emails (e.g., john@example.com, jane@example.com)",
+                }
+            ),
+        }
+        help_texts = {
+            "exclusions": "Enter email addresses of other participants this person cannot be assigned to",
+        }
