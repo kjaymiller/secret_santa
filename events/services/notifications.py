@@ -473,49 +473,6 @@ class NotificationService:
         logger.info(f"Exclusion group notification complete: {success_count} sent, {failed_count} failed")
         return failed_count == 0
 
-    def send_account_creation_email(self, user) -> bool:
-        """
-        Send welcome email to user upon account creation.
-
-        Args:
-            user: User model instance
-
-        Returns:
-            True if email was sent successfully
-        """
-        if not user.email:
-            logger.warning(f"User {user.username} has no email, skipping account creation notification")
-            return False
-
-        # Try to get site domain, fallback to localhost
-        try:
-            from django.contrib.sites.models import Site
-            domain = Site.objects.get_current().domain
-            # Simple heuristic for protocol
-            protocol = "https" if "localhost" not in domain and "127.0.0.1" not in domain else "http"
-            login_url = f"{protocol}://{domain}/accounts/login/"
-        except Exception:
-            login_url = "/accounts/login/"
-
-        context = {
-            "user_name": user.get_full_name() or user.username,
-            "login_url": login_url,
-        }
-
-        try:
-            self.send_email_notification(
-                to_email=user.email,
-                subject="Welcome to Secret Santa!",
-                template_name="account_created",
-                context=context,
-                to_name=user.get_full_name(),
-            )
-            logger.info(f"Account creation email sent to {user.email}")
-            return True
-        except EmailNotificationError as e:
-            logger.error(f"Failed to send account creation email to {user.email}: {e}")
-            return False
-
     def send_event_creation_notification(self, event, request) -> bool:
         """
         Send confirmation email to organizer when event is created.
