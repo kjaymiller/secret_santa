@@ -1,7 +1,7 @@
 [project]
 name = "secret_santa"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Django application for managing Secret Santa events."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
