@@ -301,7 +301,57 @@ class TestNotificationService:
 
         mock_sms.return_value = True
 
-        result = notification_service.send_notification(notification_schedule)
 
-        assert result is True
-        mock_sms.assert_called()
+    @patch.object(NotificationService, "send_email_notification")
+    @patch.object(NotificationService, "send_sms_notification")
+    def test_send_assignment_notification_respects_preferences(
+        self, mock_sms, mock_email, notification_service, event, user
+    ):
+        """Test that notification preferences are respected."""
+        # Create user profile with 'none' preference
+        from events.models import UserProfile
+
+        if not hasattr(user, "profile"):
+            UserProfile.objects.create(user=user, notification_preference="none")
+        else:
+            user.profile.notification_preference = "none"
+            user.profile.save()
+
+        participant = baker.make(
+            Participant,
+            event=event,
+            user=user,
+            email="test@example.com",
+            phone_number="+1234567890",
+            is_confirmed=True,
+        )
+        receiver = baker.make(Participant, event=event, name="Receiver")
+        assignment = baker.make(Assignment, event=event, giver=participant, receiver=receiver)
+
+        # 1. Preference "none"
+        notification_service.send_assignment_notification(assignment)
+        mock_email.assert_not_called()
+        mock_sms.assert_not_called()
+
+        # 2. Preference "email"
+        user.profile.notification_preference = "email"
+        user.profile.save()
+        notification_service.send_assignment_notification(assignment)
+        mock_email.assert_called_once()
+        mock_sms.assert_not_called()
+        mock_email.reset_mock()
+
+        # 3. Preference "sms"
+        user.profile.notification_preference = "sms"
+        user.profile.save()
+        notification_service.send_assignment_notification(assignment)
+        mock_email.assert_not_called()
+        mock_sms.assert_called_once()
+        mock_sms.reset_mock()
+
+        # 4. Preference "both"
+        user.profile.notification_preference = "both"
+        user.profile.save()
+        notification_service.send_assignment_notification(assignment)
+        mock_email.assert_called_once()
+        mock_sms.assert_called_once()

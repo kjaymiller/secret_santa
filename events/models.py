@@ -176,7 +176,12 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True, help_text="Phone number for SMS notifications")
     notification_preference = models.CharField(
         max_length=10,
-        choices=[("email", "Email"), ("sms", "SMS")],
+        choices=[
+            ("email", "Email"),
+            ("sms", "SMS"),
+            ("both", "Both Email and SMS"),
+            ("none", "Disable Notifications"),
+        ],
         default="email",
         help_text="Preferred method for receiving notifications",
     )

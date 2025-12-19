@@ -35,11 +35,24 @@ def test_account_view_post(client):
     client.force_login(user)
 
     url = reverse("account")
-    data = {"email": "test@example.com", "notification_preference": "sms", "phone_number": ""}
+    data = {"email": "test@example.com", "notification_preference": "sms", "phone_number": "+1234567890"}
     response = client.post(url, data)
 
     # Should redirect on success
     assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_account_view_post_validation_error(client):
+    user = User.objects.create_user(username="testuser", email="test@example.com", password="password")
+    client.force_login(user)
+
+    url = reverse("account")
+    data = {"email": "test@example.com", "notification_preference": "sms", "phone_number": ""}
+    response = client.post(url, data)
+
+    assert response.status_code == 200
+    assert "Phone number is required for SMS notifications" in response.content.decode()
 
 
 @pytest.mark.django_db

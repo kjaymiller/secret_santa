@@ -31,6 +31,16 @@ class UserProfileForm(forms.ModelForm):
         if self.instance and self.instance.user:
             self.fields["email"].initial = self.instance.user.email
 
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get("phone_number")
+        notification_preference = cleaned_data.get("notification_preference")
+
+        if notification_preference in ["sms", "both"] and not phone_number:
+            self.add_error("phone_number", "Phone number is required for SMS notifications.")
+
+        return cleaned_data
+
     def save(self, commit=True):
         profile = super().save(commit=False)
         email = self.cleaned_data.get("email")

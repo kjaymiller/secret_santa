@@ -79,3 +79,25 @@
         }
     </style>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationSelect = document.getElementById('{{ form.notification_preference.id_for_label }}');
+        if (notificationSelect) {
+            let previousValue = notificationSelect.value;
+            notificationSelect.addEventListener('change', function(e) {
+                if (this.value === 'none') {
+                    if (!confirm("You won't get updates or reminders about your secret santa events.")) {
+                        this.value = previousValue;
+                    } else {
+                        previousValue = this.value;
+                    }
+                } else {
+                    previousValue = this.value;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
