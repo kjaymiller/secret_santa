@@ -156,6 +156,17 @@ else:
     EMAIL_PORT = email["EMAIL_PORT"]
     EMAIL_USE_TLS = email["EMAIL_USE_TLS"]
 
+# Twilio SendGrid Configuration
+SENDGRID_API_KEY = env.str("SENDGRID_API_KEY", default="")
+DEFAULT_FROM_EMAIL = env.str("SENDGRID_FROM_EMAIL", default="noreply@secretsanta.example.com")
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+SENDGRID_FROM_NAME = env.str("SENDGRID_FROM_NAME", default="Secret Santa")
+
+# Twilio SMS Configuration
+TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", default="")
+TWILIO_PHONE_NUMBER = env.str("TWILIO_PHONE_NUMBER", default="")
+
 # Parse cache URLS, e.g "redis://localhost:6379/0"
 CACHES = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 
