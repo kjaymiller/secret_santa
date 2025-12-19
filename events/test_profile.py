@@ -50,10 +50,10 @@ def test_resend_confirmation_view(client):
     client.force_login(user)
 
     # Create unverified primary email
-    email_address = EmailAddress.objects.create(user=user, email="test@example.com", primary=True, verified=False)
+    EmailAddress.objects.create(user=user, email="test@example.com", primary=True, verified=False)
 
     url = reverse("account-resend-confirmation")
-    
+
     # Mock send_confirmation to verify it's called
     # We can't easily mock instance methods on created objects without patching the class
     # or refreshing.
