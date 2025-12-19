@@ -19,6 +19,7 @@ from .forms import (
     UserProfileForm,
 )
 from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant, UserProfile
+from allauth.account.models import EmailAddress
 
 
 # Home Page View
@@ -58,6 +59,21 @@ class AccountView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Notification preferences updated!")
         return super().form_valid(form)
+
+
+class ResendConfirmationView(LoginRequiredMixin, View):
+    """Resend confirmation email for the primary unverified email address."""
+
+    def post(self, request):
+        email_address = EmailAddress.objects.filter(user=request.user, primary=True, verified=False).first()
+
+        if email_address:
+            email_address.send_confirmation(request)
+            messages.success(request, f"Confirmation email sent to {email_address.email}!")
+        else:
+            messages.info(request, "No unverified primary email found.")
+
+        return redirect("account")
 
 
 class AccountDeleteView(LoginRequiredMixin, DeleteView):
