@@ -27,7 +27,7 @@ class EventCreateViewTestCase(TestCase):
         event_date = date.today() + timedelta(days=30)
         registration_deadline = date.today() + timedelta(days=20)
 
-        response = self.client.post(
+        self.client.post(
             reverse("events:event-create"),
             {
                 "name": "Test Secret Santa",
@@ -73,7 +73,7 @@ class EventCreateViewTestCase(TestCase):
     def test_auto_enrolled_participant_uses_username_if_no_full_name(self):
         """Test that auto-enrolled participant uses username if no full name is available."""
         # Create user without full name
-        user_no_name = User.objects.create_user(
+        User.objects.create_user(
             username="noname",
             email="noname@example.com",
             password="testpass123",
@@ -172,28 +172,24 @@ class AccountDeleteViewTestCase(TestCase):
     """Test cases for AccountDeleteView."""
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser",
-            password="testpass123",
-            email="testuser@example.com"
-        )
+        self.user = User.objects.create_user(username="testuser", password="testpass123", email="testuser@example.com")
         self.client.login(username="testuser", password="testpass123")
 
     def test_account_delete_view_access(self):
         """Test that the account delete view is accessible for logged-in users."""
-        url = reverse('account-delete')
+        url = reverse("account-delete")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'events/account_confirm_delete.html')
+        self.assertTemplateUsed(response, "events/account_confirm_delete.html")
 
     def test_account_delete_view_post(self):
         """Test that posting to the account delete view deletes the user."""
         user_pk = self.user.pk
-        url = reverse('account-delete')
+        url = reverse("account-delete")
         response = self.client.post(url)
 
         # Should redirect to home
-        self.assertRedirects(response, reverse('home'))
+        self.assertRedirects(response, reverse("home"))
 
         # User should be deleted
         self.assertFalse(User.objects.filter(pk=user_pk).exists())
@@ -201,7 +197,7 @@ class AccountDeleteViewTestCase(TestCase):
     def test_account_delete_view_requires_login(self):
         """Test that the account delete view requires login."""
         self.client.logout()
-        url = reverse('account-delete')
+        url = reverse("account-delete")
         response = self.client.get(url)
 
         # Should redirect to login

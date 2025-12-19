@@ -8,7 +8,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ["user__username", "user__email"]
 
 
-
 class ParticipantInline(admin.TabularInline):
     model = Participant
     extra = 0

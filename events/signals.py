@@ -17,4 +17,4 @@ def save_user_profile(sender, instance, **kwargs):
     if not hasattr(instance, "profile"):
         UserProfile.objects.create(user=instance)
     # No need to save profile if user is saved, unless we want to sync something
-    # instance.profile.save() 
+    # instance.profile.save()
