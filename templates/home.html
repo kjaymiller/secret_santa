@@ -167,19 +167,27 @@
 
 {% block content %}
     <div class="hero">
-        <h1>🎅 Welcome to Secret Santa</h1>
-        <p>Organize the perfect gift exchange with friends, family, or colleagues</p>
-
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and user_event_count == 0 %}
+            <h1>🎅 Welcome to Secret Santa</h1>
+            <p>You're all set up! Create your first event to start spreading the holiday cheer.</p>
             <div class="cta-buttons">
-                <a href="{% url 'events:event-create' %}" class="btn">Create New Event</a>
-                <a href="{% url 'events:event-list' %}" class="btn btn-secondary">View My Events</a>
+                <a href="{% url 'events:event-create' %}" class="btn">Create Your First Event</a>
             </div>
         {% else %}
-            <div class="cta-buttons">
-                <a href="#" class="btn">Get Started</a>
-                <a href="#" class="btn btn-secondary">Learn More</a>
-            </div>
+            <h1>🎅 Welcome to Secret Santa</h1>
+            <p>Organize the perfect gift exchange with friends, family, or colleagues</p>
+
+            {% if user.is_authenticated %}
+                <div class="cta-buttons">
+                    <a href="{% url 'events:event-create' %}" class="btn">Create New Event</a>
+                    <a href="{% url 'events:event-list' %}" class="btn btn-secondary">View My Events</a>
+                </div>
+            {% else %}
+                <div class="cta-buttons">
+                    <a href="{% url 'events:event-create' %}" class="btn">Get Started</a>
+                    <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -234,7 +242,7 @@
         </div>
     </div>
 
-    <div class="how-it-works">
+    <div class="how-it-works" id="how-it-works">
         <h2>How It Works</h2>
         <div class="steps">
             <div class="step">

@@ -1,0 +1,26 @@
+<div class="card text-center" style="padding: 60px 20px;">
+    {% if icon %}
+        <div style="font-size: 48px; margin-bottom: 24px; opacity: 0.9;">{{ icon|safe }}</div>
+    {% endif %}
+
+    {% if title %}
+        <h3 class="text-xl font-semibold text-charcoal mb-3">{{ title }}</h3>
+    {% endif %}
+
+    {% if description %}
+        <p class="text-gray mb-8" style="max-width: 400px; margin-left: auto; margin-right: auto; font-size: 16px;">{{ description }}</p>
+    {% endif %}
+
+    {% if action_url and action_text %}
+        <a href="{{ action_url }}" class="btn">
+            {% if action_icon %}{{ action_icon|safe }} {% endif %}
+            {{ action_text }}
+        </a>
+    {% endif %}
+
+    {% if extra_content %}
+        <div class="mt-6">
+            {{ extra_content }}
+        </div>
+    {% endif %}
+</div>

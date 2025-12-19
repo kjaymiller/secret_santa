@@ -94,6 +94,14 @@
                         <p style="color: var(--charcoal); white-space: pre-wrap;">{{ participant.wishlist }}</p>
                     </div>
                 </div>
+            {% else %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                        Gift Wishlist
+                    </h2>
+                    {% url 'events:participant-update' participant.pk as update_url %}
+                    {% include "includes/empty_state.html" with icon="📝" title="No wishlist yet" description="Help your Secret Santa by adding some gift ideas!" action_url=update_url action_text="Add Wishlist" %}
+                </div>
             {% endif %}
 
             {% if participant.event.assignments_revealed_at %}

@@ -105,15 +105,8 @@
                 </div>
             </div>
         {% else %}
-            <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
-                <div style="font-size: 48px; margin-bottom: 16px;">📧</div>
-                <p style="font-size: 18px; color: var(--soft-gray); margin-bottom: 20px;">
-                    No notifications scheduled yet
-                </p>
-                <a href="{% url 'events:notification-create' event.pk %}" class="btn">
-                    Create Your First Notification
-                </a>
-            </div>
+            {% url 'events:notification-create' event.pk as create_url %}
+            {% include "includes/empty_state.html" with icon="📧" title="No notifications scheduled" description="Keep everyone on track! Schedule email or SMS reminders for your participants." action_url=create_url action_text="Create Your First Notification" %}
         {% endif %}
     </div>
 {% endblock content %}

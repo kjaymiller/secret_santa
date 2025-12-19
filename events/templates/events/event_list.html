@@ -89,12 +89,8 @@
                 </div>
             {% endif %}
         {% else %}
-            <div class="text-center p-16 bg-white rounded shadow-sm">
-                <p class="text-lg text-gray mb-5">
-                    You haven't created any events yet.
-                </p>
-                <a href="{% url 'events:event-create' %}" class="btn">Create Your First Event</a>
-            </div>
+            {% url 'events:event-create' as create_url %}
+            {% include "includes/empty_state.html" with icon="🎉" title="No events yet" description="Get the party started! Create your first Secret Santa event and invite your friends." action_url=create_url action_text="Create Your First Event" %}
         {% endif %}
     </div>
 {% endblock content %}

@@ -77,14 +77,8 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div style="background: white; padding: 60px 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
-                <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 20px;">
-                    No exclusion groups yet. Create one to quickly exclude groups of participants from each other.
-                </p>
-                <a href="{% url 'events:exclusion-group-create' event.pk %}" class="btn">
-                    Create Your First Group
-                </a>
-            </div>
+            {% url 'events:exclusion-group-create' event.pk as create_url %}
+            {% include "includes/empty_state.html" with icon="🚫" title="No exclusion groups yet" description="Create a group to quickly exclude participants from being assigned to each other (e.g., couples, families)." action_url=create_url action_text="Create Your First Group" %}
         {% endif %}
     </div>
 {% endblock content %}

@@ -34,6 +34,9 @@ class HomeView(View):
             "total_events": Event.objects.count(),
             "active_events": Event.objects.filter(is_active=True).count(),
         }
+        if request.user.is_authenticated:
+            context["user_event_count"] = Event.objects.filter(organizer=request.user).count()
+        
         return render(request, "home.html", context)
 
 
