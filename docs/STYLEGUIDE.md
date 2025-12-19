@@ -36,7 +36,7 @@ We use [Kroki](https://kroki.kjaymiller.dev) to render diagrams dynamically from
 
 Here is an example of our development workflow rendered via Kroki:
 
-![Development Workflow](https://kroki.kjaymiller.dev/mermaid/svg/eNpLL0osyFAIceFSAALH6NDi1KJYBV1du5rwosyS1GIF5_yU1BoFJw3n_NzczBJNsDInsIKQosz09NSi4hoF52qfzLySzLz0WrC0M1g6ILEYKOUS7ZtalJ4aiyThlpiZU6PgGu2WWQERdgUJKzgBAEpMKAs=)
+![Development Workflow](images/development_workflow.svg)
 
 ### How to Add Diagrams
 1. Create your diagram using Mermaid, PlantUML, etc.
