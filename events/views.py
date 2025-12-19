@@ -18,6 +18,7 @@ from .forms import (
     ParticipantUpdateForm,
     UserProfileForm,
 )
+from .mixins import VerifiedEmailRequiredMixin
 from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant, UserProfile
 from allauth.account.models import EmailAddress
 
@@ -194,7 +195,7 @@ class EventSendInvitesView(LoginRequiredMixin, View):
         return redirect("events:event-detail", pk=pk)
 
 
-class EventCreateView(LoginRequiredMixin, CreateView):
+class EventCreateView(VerifiedEmailRequiredMixin, LoginRequiredMixin, CreateView):
     """Create a new Secret Santa event."""
 
     model = Event
@@ -318,6 +319,15 @@ class ParticipantJoinView(CreateView):
     model = Participant
     form_class = ParticipantJoinForm
     template_name = "events/participant_join.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            from allauth.account.models import EmailAddress
+
+            if not EmailAddress.objects.filter(user=request.user, verified=True).exists():
+                messages.warning(request, "Please verify your email to join events with your account.")
+                return redirect("account")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
