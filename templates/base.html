@@ -34,7 +34,8 @@
                     <div class="messages">
                         {% for message in messages %}
                             <div class="message {{ message.tags }}">
-                                {{ message }}
+                                <span class="message-content">{{ message }}</span>
+                                <button class="message-close">&times;</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -47,6 +48,7 @@
                 <p>&copy; {% now "Y" %} Secret Santa. Spread the joy of giving!</p>
             </footer>
         </div>
+        <script src="{% static 'js/notifications.js' %}"></script>
         {% block extra_js %}{% endblock %}
     </body>
 </html>
