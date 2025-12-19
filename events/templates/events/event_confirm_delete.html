@@ -3,70 +3,70 @@
 {% block title %}Delete Event - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--deep-red); font-size: 32px; font-weight: 700;">
-            Delete Event
-        </h1>
-    </div>
-
-    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--deep-red);">
-        <h2 style="font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-            Are you sure you want to delete "{{ object.name }}"?
-        </h2>
-
-        <div style="background: #fce8e8; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
-            <p style="color: var(--deep-red); margin-bottom: 8px; font-weight: 500;">
-                This action cannot be undone!
-            </p>
-            <p style="color: var(--soft-gray); font-size: 14px;">
-                Deleting this event will permanently remove:
-            </p>
-            <ul style="color: var(--soft-gray); font-size: 14px; margin-top: 8px; margin-left: 20px;">
-                <li>All {{ object.participants.count }} participants</li>
-                <li>All assignments (if generated)</li>
-                <li>All notification schedules</li>
-                <li>All event data and settings</li>
-            </ul>
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--deep-red); font-size: 32px; font-weight: 700;">
+                Delete Event
+            </h1>
         </div>
 
-        <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
-            <h3 style="font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
-                Event Details:
-            </h3>
-            <div style="display: grid; gap: 8px; font-size: 14px;">
-                <div>
-                    <strong>Name:</strong> {{ object.name }}
-                </div>
-                <div>
-                    <strong>Exchange Date:</strong> {{ object.exchange_date|date:"M d, Y" }}
-                </div>
-                <div>
-                    <strong>Participants:</strong> {{ object.participants.count }}
-                </div>
-                <div>
-                    <strong>Invite Code:</strong> <code>{{ object.invite_code }}</code>
-                </div>
-                {% if object.assignments_revealed_at %}
+        <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--deep-red);">
+            <h2 style="font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                Are you sure you want to delete "{{ object.name }}"?
+            </h2>
+
+            <div style="background: #fce8e8; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+                <p style="color: var(--deep-red); margin-bottom: 8px; font-weight: 500;">
+                    This action cannot be undone!
+                </p>
+                <p style="color: var(--soft-gray); font-size: 14px;">
+                    Deleting this event will permanently remove:
+                </p>
+                <ul style="color: var(--soft-gray); font-size: 14px; margin-top: 8px; margin-left: 20px;">
+                    <li>All {{ object.participants.count }} participants</li>
+                    <li>All assignments (if generated)</li>
+                    <li>All notification schedules</li>
+                    <li>All event data and settings</li>
+                </ul>
+            </div>
+
+            <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
+                    Event Details:
+                </h3>
+                <div style="display: grid; gap: 8px; font-size: 14px;">
                     <div>
-                        <strong>Assignments:</strong>
-                        <span style="color: var(--pine);">Generated on {{ object.assignments_revealed_at|date:"M d, Y" }}</span>
+                        <strong>Name:</strong> {{ object.name }}
                     </div>
-                {% endif %}
+                    <div>
+                        <strong>Exchange Date:</strong> {{ object.exchange_date|date:"M d, Y" }}
+                    </div>
+                    <div>
+                        <strong>Participants:</strong> {{ object.participants.count }}
+                    </div>
+                    <div>
+                        <strong>Invite Code:</strong> <code>{{ object.invite_code }}</code>
+                    </div>
+                    {% if object.assignments_revealed_at %}
+                        <div>
+                            <strong>Assignments:</strong>
+                            <span style="color: var(--pine);">Generated on {{ object.assignments_revealed_at|date:"M d, Y" }}</span>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
 
-        <form method="post">
-            {% csrf_token %}
-            <div style="display: flex; gap: 12px;">
-                <button type="submit" class="btn" style="background: var(--deep-red);">
-                    Yes, Delete Event
-                </button>
-                <a href="{% url 'events:event-detail' object.pk %}" class="btn btn-secondary">
-                    Cancel
-                </a>
-            </div>
-        </form>
+            <form method="post">
+                {% csrf_token %}
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn" style="background: var(--deep-red);">
+                        Yes, Delete Event
+                    </button>
+                    <a href="{% url 'events:event-detail' object.pk %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

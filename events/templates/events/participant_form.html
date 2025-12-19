@@ -3,111 +3,111 @@
 {% block title %}Edit Profile - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 700px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700;">
-            Edit Your Profile
-        </h1>
-        <p style="color: var(--soft-gray); font-size: 16px;">
-            Update your information for {{ form.instance.event.name }}
-        </p>
+    <div style="max-width: 700px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700;">
+                Edit Your Profile
+            </h1>
+            <p style="color: var(--soft-gray); font-size: 16px;">
+                Update your information for {{ form.instance.event.name }}
+            </p>
+        </div>
+
+        <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="message error" style="margin-bottom: 20px;">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div style="display: grid; gap: 24px;">
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Your Name <span style="color: var(--deep-red);">*</span>
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.wishlist.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Gift Wishlist
+                        </label>
+                        {{ form.wishlist }}
+                        {% if form.wishlist.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.wishlist.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            Share some gift ideas to help your Secret Santa. Be specific!
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="{{ form.phone_number.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Phone Number
+                        </label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.phone_number.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            Optional: for SMS notifications
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 32px; display: flex; gap: 12px;">
+                    <button type="submit" class="btn">
+                        Update Profile
+                    </button>
+                    <a href="{% url 'events:participant-detail' form.instance.pk %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div style="margin-top: 20px; padding: 16px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #1976d2;">
+            <p style="color: #1565c0; font-size: 14px;">
+                <strong>Note:</strong> Your email address cannot be changed. If you need to use a different email, please contact the event organizer.
+            </p>
+        </div>
     </div>
 
-    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <form method="post">
-            {% csrf_token %}
+    <style>
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
 
-            {% if form.non_field_errors %}
-                <div class="message error" style="margin-bottom: 20px;">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--forest-green);
+        }
 
-            <div style="display: grid; gap: 24px;">
-                <div>
-                    <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Your Name <span style="color: var(--deep-red);">*</span>
-                    </label>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.name.errors }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.wishlist.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Gift Wishlist
-                    </label>
-                    {{ form.wishlist }}
-                    {% if form.wishlist.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.wishlist.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        Share some gift ideas to help your Secret Santa. Be specific!
-                    </p>
-                </div>
-
-                <div>
-                    <label for="{{ form.phone_number.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Phone Number
-                    </label>
-                    {{ form.phone_number }}
-                    {% if form.phone_number.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.phone_number.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        Optional: for SMS notifications
-                    </p>
-                </div>
-            </div>
-
-            <div style="margin-top: 32px; display: flex; gap: 12px;">
-                <button type="submit" class="btn">
-                    Update Profile
-                </button>
-                <a href="{% url 'events:participant-detail' form.instance.pk %}" class="btn btn-secondary">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <div style="margin-top: 20px; padding: 16px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #1976d2;">
-        <p style="color: #1565c0; font-size: 14px;">
-            <strong>Note:</strong> Your email address cannot be changed. If you need to use a different email, please contact the event organizer.
-        </p>
-    </div>
-</div>
-
-<style>
-    input[type="text"],
-    input[type="tel"],
-    textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 15px;
-        font-family: inherit;
-        transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus,
-    input[type="tel"]:focus,
-    textarea:focus {
-        outline: none;
-        border-color: var(--forest-green);
-    }
-
-    textarea {
-        min-height: 120px;
-        resize: vertical;
-    }
-</style>
-{% endblock %}
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+    </style>
+{% endblock content %}

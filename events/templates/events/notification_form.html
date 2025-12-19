@@ -3,156 +3,156 @@
 {% block title %}{% if form.instance.pk %}Edit Notification{% else %}Schedule Notification{% endif %} - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-            {% if form.instance.pk %}
-                Edit Notification Schedule
-            {% else %}
-                Schedule New Notification
-            {% endif %}
-        </h1>
-        <p style="color: var(--soft-gray); font-size: 16px;">
-            {{ event.name }}
-        </p>
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                {% if form.instance.pk %}
+                    Edit Notification Schedule
+                {% else %}
+                    Schedule New Notification
+                {% endif %}
+            </h1>
+            <p style="color: var(--soft-gray); font-size: 16px;">
+                {{ event.name }}
+            </p>
+        </div>
+
+        <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="message error" style="margin-bottom: 20px;">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div style="display: grid; gap: 24px;">
+                    <div>
+                        <label for="{{ form.notification_type.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Notification Type <span style="color: var(--deep-red);">*</span>
+                        </label>
+                        {{ form.notification_type }}
+                        {% if form.notification_type.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.notification_type.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            What should participants be notified about?
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="{{ form.delivery_method.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Delivery Method <span style="color: var(--deep-red);">*</span>
+                        </label>
+                        {{ form.delivery_method }}
+                        {% if form.delivery_method.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.delivery_method.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            How should the notification be sent? (SMS requires phone numbers)
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="{{ form.scheduled_time.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Scheduled Time <span style="color: var(--deep-red);">*</span>
+                        </label>
+                        {{ form.scheduled_time }}
+                        {% if form.scheduled_time.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.scheduled_time.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            When should this notification be sent?
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="{{ form.message.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                            Custom Message
+                        </label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                                {{ form.message.errors }}
+                            </div>
+                        {% endif %}
+                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
+                            Add a custom message to the notification (optional). A default message will be used if blank.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 32px; display: flex; gap: 12px;">
+                    <button type="submit" class="btn">
+                        {% if form.instance.pk %}
+                            Update Notification
+                        {% else %}
+                            Schedule Notification
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'events:notification-list' event.pk %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div style="margin-top: 24px; background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--pine);">
+            <h3 style="font-size: 18px; font-weight: 600; color: var(--forest-green); margin-bottom: 12px;">
+                Notification Tips
+            </h3>
+            <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
+                <li style="margin-bottom: 8px;">
+                    <strong>Assignment Reveal:</strong> Notify all participants when Secret Santa assignments are ready
+                </li>
+                <li style="margin-bottom: 8px;">
+                    <strong>Assignment Reminder:</strong> Remind participants who haven't viewed their assignments yet
+                </li>
+                <li style="margin-bottom: 8px;">
+                    <strong>Exchange Reminder:</strong> Send reminders before the gift exchange date
+                </li>
+                <li>
+                    Schedule notifications strategically to maximize participation and excitement!
+                </li>
+            </ul>
+        </div>
     </div>
 
-    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <form method="post">
-            {% csrf_token %}
+    <style>
+        select,
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: white;
+        }
 
-            {% if form.non_field_errors %}
-                <div class="message error" style="margin-bottom: 20px;">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
+        select:focus,
+        input[type="datetime-local"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--forest-green);
+        }
 
-            <div style="display: grid; gap: 24px;">
-                <div>
-                    <label for="{{ form.notification_type.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Notification Type <span style="color: var(--deep-red);">*</span>
-                    </label>
-                    {{ form.notification_type }}
-                    {% if form.notification_type.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.notification_type.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        What should participants be notified about?
-                    </p>
-                </div>
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
 
-                <div>
-                    <label for="{{ form.delivery_method.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Delivery Method <span style="color: var(--deep-red);">*</span>
-                    </label>
-                    {{ form.delivery_method }}
-                    {% if form.delivery_method.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.delivery_method.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        How should the notification be sent? (SMS requires phone numbers)
-                    </p>
-                </div>
-
-                <div>
-                    <label for="{{ form.scheduled_time.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Scheduled Time <span style="color: var(--deep-red);">*</span>
-                    </label>
-                    {{ form.scheduled_time }}
-                    {% if form.scheduled_time.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.scheduled_time.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        When should this notification be sent?
-                    </p>
-                </div>
-
-                <div>
-                    <label for="{{ form.message.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
-                        Custom Message
-                    </label>
-                    {{ form.message }}
-                    {% if form.message.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
-                            {{ form.message.errors }}
-                        </div>
-                    {% endif %}
-                    <p style="color: var(--soft-gray); font-size: 13px; margin-top: 4px;">
-                        Add a custom message to the notification (optional). A default message will be used if blank.
-                    </p>
-                </div>
-            </div>
-
-            <div style="margin-top: 32px; display: flex; gap: 12px;">
-                <button type="submit" class="btn">
-                    {% if form.instance.pk %}
-                        Update Notification
-                    {% else %}
-                        Schedule Notification
-                    {% endif %}
-                </button>
-                <a href="{% url 'events:notification-list' event.pk %}" class="btn btn-secondary">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <div style="margin-top: 24px; background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--pine);">
-        <h3 style="font-size: 18px; font-weight: 600; color: var(--forest-green); margin-bottom: 12px;">
-            Notification Tips
-        </h3>
-        <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
-            <li style="margin-bottom: 8px;">
-                <strong>Assignment Reveal:</strong> Notify all participants when Secret Santa assignments are ready
-            </li>
-            <li style="margin-bottom: 8px;">
-                <strong>Assignment Reminder:</strong> Remind participants who haven't viewed their assignments yet
-            </li>
-            <li style="margin-bottom: 8px;">
-                <strong>Exchange Reminder:</strong> Send reminders before the gift exchange date
-            </li>
-            <li>
-                Schedule notifications strategically to maximize participation and excitement!
-            </li>
-        </ul>
-    </div>
-</div>
-
-<style>
-    select,
-    input[type="datetime-local"],
-    textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 15px;
-        font-family: inherit;
-        transition: border-color 0.2s;
-        background: white;
-    }
-
-    select:focus,
-    input[type="datetime-local"]:focus,
-    textarea:focus {
-        outline: none;
-        border-color: var(--forest-green);
-    }
-
-    textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-
-    select {
-        cursor: pointer;
-    }
-</style>
-{% endblock %}
+        select {
+            cursor: pointer;
+        }
+    </style>
+{% endblock content %}

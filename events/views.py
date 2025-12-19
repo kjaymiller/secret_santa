@@ -2,13 +2,20 @@ import random
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from .forms import EventForm, ExclusionGroupForm, InviteCodeForm, NotificationScheduleForm, ParticipantExclusionForm, ParticipantJoinForm, ParticipantUpdateForm
+from .forms import (
+    EventForm,
+    ExclusionGroupForm,
+    InviteCodeForm,
+    NotificationScheduleForm,
+    ParticipantExclusionForm,
+    ParticipantJoinForm,
+    ParticipantUpdateForm,
+)
 from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant
 
 
@@ -95,7 +102,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
                 self.request,
                 f"Event '{form.instance.name}' created successfully! Confirmation email sent with invite code.",
             )
-        except Exception as e:
+        except Exception:
             messages.warning(
                 self.request,
                 f"Event '{form.instance.name}' created successfully! (Email notification failed to send)",
@@ -150,7 +157,7 @@ class EventDeleteView(LoginRequiredMixin, DeleteView):
                     self.request,
                     f"Event '{event_name}' deleted successfully! Cancellation emails sent to {participant_count} participant(s).",
                 )
-            except Exception as e:
+            except Exception:
                 messages.warning(
                     self.request,
                     f"Event '{event_name}' deleted, but some cancellation emails failed to send.",
@@ -228,7 +235,7 @@ class ParticipantJoinView(CreateView):
                 self.request,
                 f"Successfully joined '{event.name}'! Please check your email to confirm your participation.",
             )
-        except Exception as e:
+        except Exception:
             messages.warning(
                 self.request,
                 f"You've been registered for '{event.name}', but we couldn't send the confirmation email. Please contact the organizer.",
@@ -336,7 +343,7 @@ class ParticipantExclusionManageView(LoginRequiredMixin, View):
         from django.forms import modelformset_factory
 
         event = get_object_or_404(Event, pk=event_pk, organizer=request.user)
-        participants = event.participants.filter(is_confirmed=True).order_by('name')
+        participants = event.participants.filter(is_confirmed=True).order_by("name")
 
         ParticipantExclusionFormSet = modelformset_factory(
             Participant,
@@ -364,7 +371,7 @@ class ParticipantExclusionManageView(LoginRequiredMixin, View):
         from django.forms import modelformset_factory
 
         event = get_object_or_404(Event, pk=event_pk, organizer=request.user)
-        participants = event.participants.filter(is_confirmed=True).order_by('name')
+        participants = event.participants.filter(is_confirmed=True).order_by("name")
 
         ParticipantExclusionFormSet = modelformset_factory(
             Participant,
@@ -405,7 +412,9 @@ class ExclusionGroupListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         event_pk = self.kwargs.get("event_pk")
-        return ExclusionGroup.objects.filter(event__pk=event_pk, event__organizer=self.request.user).prefetch_related('members')
+        return ExclusionGroup.objects.filter(event__pk=event_pk, event__organizer=self.request.user).prefetch_related(
+            "members"
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -424,7 +433,7 @@ class ExclusionGroupCreateView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         event_pk = self.kwargs.get("event_pk")
-        kwargs['event'] = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
+        kwargs["event"] = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
         return kwargs
 
     def form_valid(self, form):
@@ -445,7 +454,7 @@ class ExclusionGroupCreateView(LoginRequiredMixin, CreateView):
                 self.request,
                 f"Exclusion group '{self.object.name}' created and exclusions applied! Notification emails sent to all members.",
             )
-        except Exception as e:
+        except Exception:
             messages.warning(
                 self.request,
                 f"Exclusion group '{self.object.name}' created, but some notification emails failed to send.",
@@ -475,7 +484,7 @@ class ExclusionGroupUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['event'] = self.object.event
+        kwargs["event"] = self.object.event
         return kwargs
 
     def form_valid(self, form):
@@ -497,7 +506,7 @@ class ExclusionGroupUpdateView(LoginRequiredMixin, UpdateView):
                 self.request,
                 f"Exclusion group '{self.object.name}' updated and exclusions reapplied! Notification emails sent to all members.",
             )
-        except Exception as e:
+        except Exception:
             messages.warning(
                 self.request,
                 f"Exclusion group '{self.object.name}' updated, but some notification emails failed to send.",
@@ -553,9 +562,7 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
             return redirect("events:event-detail", pk=event_pk)
 
         # Get confirmed participants with prefetched exclusions for efficiency
-        participants = list(
-            event.participants.filter(is_confirmed=True).prefetch_related('exclusions')
-        )
+        participants = list(event.participants.filter(is_confirmed=True).prefetch_related("exclusions"))
 
         if len(participants) < 3:
             messages.error(request, "At least 3 confirmed participants are required to generate assignments.")
@@ -585,7 +592,7 @@ class AssignmentGenerateView(LoginRequiredMixin, View):
         exclusion_map = {}
         for participant in participants:
             # Use prefetch_related for efficiency
-            excluded_ids = set(participant.exclusions.values_list('id', flat=True))
+            excluded_ids = set(participant.exclusions.values_list("id", flat=True))
             exclusion_map[participant.id] = excluded_ids
 
         for attempt in range(max_retries):

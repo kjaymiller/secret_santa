@@ -3,50 +3,50 @@
 {% block title %}Delete Exclusion Group - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-            Delete Exclusion Group
-        </h1>
-        <p style="color: var(--soft-gray); font-size: 16px;">
-            {{ event.name }}
-        </p>
-    </div>
-
-    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <div style="background: #fce8e8; padding: 20px; border-radius: 8px; border-left: 4px solid var(--deep-red); margin-bottom: 24px;">
-            <h2 style="color: var(--deep-red); font-size: 18px; font-weight: 600; margin-bottom: 12px;">
-                Are you sure you want to delete "{{ object.name }}"?
-            </h2>
-            <p style="color: var(--charcoal); margin-bottom: 12px;">
-                This will remove the exclusion group and all its associated exclusions.
-            </p>
-            <p style="color: var(--charcoal); font-weight: 500;">
-                Members ({{ object.members.count }}):
-                {% for member in object.members.all %}
-                    {{ member.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                Delete Exclusion Group
+            </h1>
+            <p style="color: var(--soft-gray); font-size: 16px;">
+                {{ event.name }}
             </p>
         </div>
 
-        <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
-            <p style="color: var(--charcoal); font-size: 14px;">
-                <strong>Note:</strong> Deleting this group will remove all mutual exclusions between these members.
-                They may be assigned to give gifts to each other in future assignment generations.
-            </p>
-        </div>
-
-        <form method="post">
-            {% csrf_token %}
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <a href="{% url 'events:exclusion-group-list' event.pk %}" class="btn btn-secondary">
-                    Cancel
-                </a>
-                <button type="submit" class="btn" style="background: var(--deep-red);">
-                    Delete Group
-                </button>
+        <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="background: #fce8e8; padding: 20px; border-radius: 8px; border-left: 4px solid var(--deep-red); margin-bottom: 24px;">
+                <h2 style="color: var(--deep-red); font-size: 18px; font-weight: 600; margin-bottom: 12px;">
+                    Are you sure you want to delete "{{ object.name }}"?
+                </h2>
+                <p style="color: var(--charcoal); margin-bottom: 12px;">
+                    This will remove the exclusion group and all its associated exclusions.
+                </p>
+                <p style="color: var(--charcoal); font-weight: 500;">
+                    Members ({{ object.members.count }}):
+                    {% for member in object.members.all %}
+                        {{ member.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
             </div>
-        </form>
+
+            <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+                <p style="color: var(--charcoal); font-size: 14px;">
+                    <strong>Note:</strong> Deleting this group will remove all mutual exclusions between these members.
+                    They may be assigned to give gifts to each other in future assignment generations.
+                </p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <a href="{% url 'events:exclusion-group-list' event.pk %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn" style="background: var(--deep-red);">
+                        Delete Group
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

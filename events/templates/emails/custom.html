@@ -3,31 +3,31 @@
 {% block title %}Update from {{ event_name }}{% endblock %}
 
 {% block content %}
-<div class="greeting">
-    Hi {{ participant_name }},
-</div>
+    <div class="greeting">
+        Hi {{ participant_name }},
+    </div>
 
-<p>You have an update from <strong>{{ event_name }}</strong>.</p>
+    <p>You have an update from <strong>{{ event_name }}</strong>.</p>
 
-<div class="info-box">
-    <p><strong>Event Details:</strong></p>
-    <ul style="margin: 10px 0; padding-left: 20px;">
-        <li><strong>Event Name:</strong> {{ event_name }}</li>
-        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
-        {% if budget_max %}
-        <li><strong>Budget:</strong> ${{ budget_max }}</li>
-        {% endif %}
-    </ul>
-</div>
+    <div class="info-box">
+        <p><strong>Event Details:</strong></p>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+            <li><strong>Event Name:</strong> {{ event_name }}</li>
+            <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+            {% if budget_max %}
+                <li><strong>Budget:</strong> ${{ budget_max }}</li>
+            {% endif %}
+        </ul>
+    </div>
 
-{% if custom_message %}
-<div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
-    <p style="margin-top: 0;"><strong>Message:</strong></p>
-    <div style="white-space: pre-wrap;">{{ custom_message }}</div>
-</div>
-{% endif %}
+    {% if custom_message %}
+        <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
+            <p style="margin-top: 0;"><strong>Message:</strong></p>
+            <div style="white-space: pre-wrap;">{{ custom_message }}</div>
+        </div>
+    {% endif %}
 
-<p>If you have any questions, please contact the event organizer.</p>
+    <p>If you have any questions, please contact the event organizer.</p>
 
-<p>Happy Secret Santa!</p>
-{% endblock %}
+    <p>Happy Secret Santa!</p>
+{% endblock content %}

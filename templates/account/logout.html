@@ -1,32 +1,32 @@
 {% extends "base.html" %}
-{% load allauth account %}
+{% load account allauth %}
 
 {% block title %}Logout - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 500px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
-            Sign Out
-        </h1>
-    </div>
+    <div style="max-width: 500px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+                Sign Out
+            </h1>
+        </div>
 
-    <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
-        <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 30px;">
-            Are you sure you want to sign out?
-        </p>
+        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
+            <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 30px;">
+                Are you sure you want to sign out?
+            </p>
 
-        <form method="post" action="{% url 'account_logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn" style="padding: 14px 32px; font-size: 16px;">
-                Yes, Sign Out
-            </button>
-            <div style="margin-top: 16px;">
-                <a href="{% url 'home' %}" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">
-                    Cancel
-                </a>
-            </div>
-        </form>
+            <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn" style="padding: 14px 32px; font-size: 16px;">
+                    Yes, Sign Out
+                </button>
+                <div style="margin-top: 16px;">
+                    <a href="{% url 'home' %}" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

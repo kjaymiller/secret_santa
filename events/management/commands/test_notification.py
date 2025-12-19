@@ -25,9 +25,7 @@ class Command(BaseCommand):
         test_phone = options.get("sms")
 
         if not test_email and not test_phone:
-            self.stdout.write(
-                self.style.ERROR("Please specify either --email or --sms (or both)")
-            )
+            self.stdout.write(self.style.ERROR("Please specify either --email or --sms (or both)"))
             return
 
         notification_service = get_notification_service()
@@ -55,29 +53,20 @@ class Command(BaseCommand):
                 )
 
                 if success:
-                    self.stdout.write(
-                        self.style.SUCCESS(f"✓ Test email sent successfully to {test_email}")
-                    )
-                    self.stdout.write(
-                        "  Check your inbox (and spam folder) for the test email."
-                    )
+                    self.stdout.write(self.style.SUCCESS(f"✓ Test email sent successfully to {test_email}"))
+                    self.stdout.write("  Check your inbox (and spam folder) for the test email.")
                 else:
-                    self.stdout.write(
-                        self.style.ERROR(f"✗ Failed to send test email to {test_email}")
-                    )
+                    self.stdout.write(self.style.ERROR(f"✗ Failed to send test email to {test_email}"))
 
             except Exception as e:
-                self.stdout.write(
-                    self.style.ERROR(f"✗ Error sending test email: {e}")
-                )
+                self.stdout.write(self.style.ERROR(f"✗ Error sending test email: {e}"))
 
         # Test SMS
         if test_phone:
             self.stdout.write(f"\nTesting SMS notification to: {test_phone}")
             try:
                 test_message = (
-                    "This is a test SMS from Secret Santa. "
-                    "If you received this, your SMS notifications are working!"
+                    "This is a test SMS from Secret Santa. If you received this, your SMS notifications are working!"
                 )
 
                 success = notification_service.send_sms_notification(
@@ -86,21 +75,13 @@ class Command(BaseCommand):
                 )
 
                 if success:
-                    self.stdout.write(
-                        self.style.SUCCESS(f"✓ Test SMS sent successfully to {test_phone}")
-                    )
-                    self.stdout.write(
-                        "  Check your phone for the test SMS."
-                    )
+                    self.stdout.write(self.style.SUCCESS(f"✓ Test SMS sent successfully to {test_phone}"))
+                    self.stdout.write("  Check your phone for the test SMS.")
                 else:
-                    self.stdout.write(
-                        self.style.ERROR(f"✗ Failed to send test SMS to {test_phone}")
-                    )
+                    self.stdout.write(self.style.ERROR(f"✗ Failed to send test SMS to {test_phone}"))
 
             except Exception as e:
-                self.stdout.write(
-                    self.style.ERROR(f"✗ Error sending test SMS: {e}")
-                )
+                self.stdout.write(self.style.ERROR(f"✗ Error sending test SMS: {e}"))
 
         self.stdout.write("\n" + "=" * 70)
         self.stdout.write("Test complete!")

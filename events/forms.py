@@ -102,9 +102,8 @@ class ParticipantUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             # Only show other participants from the same event (exclude self)
-            self.fields['exclusions'].queryset = Participant.objects.filter(
-                event=self.instance.event,
-                is_confirmed=True
+            self.fields["exclusions"].queryset = Participant.objects.filter(
+                event=self.instance.event, is_confirmed=True
             ).exclude(pk=self.instance.pk)
 
     class Meta:
@@ -171,12 +170,11 @@ class ParticipantExclusionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             # Only show other participants from the same event (exclude self)
-            self.fields['exclusions'].queryset = Participant.objects.filter(
-                event=self.instance.event,
-                is_confirmed=True
+            self.fields["exclusions"].queryset = Participant.objects.filter(
+                event=self.instance.event, is_confirmed=True
             ).exclude(pk=self.instance.pk)
             # Use a more compact widget for organizer view
-            self.fields['exclusions'].label_from_instance = lambda obj: f"{obj.name} ({obj.email})"
+            self.fields["exclusions"].label_from_instance = lambda obj: f"{obj.name} ({obj.email})"
 
     class Meta:
         model = Participant
@@ -193,14 +191,13 @@ class ExclusionGroupForm(forms.ModelForm):
     """Form for managing exclusion groups."""
 
     def __init__(self, *args, **kwargs):
-        event = kwargs.pop('event', None)
+        event = kwargs.pop("event", None)
         super().__init__(*args, **kwargs)
         if event:
             # Only show confirmed participants from this event
-            self.fields['members'].queryset = Participant.objects.filter(
-                event=event,
-                is_confirmed=True
-            ).order_by('name')
+            self.fields["members"].queryset = Participant.objects.filter(event=event, is_confirmed=True).order_by(
+                "name"
+            )
 
     class Meta:
         model = ExclusionGroup

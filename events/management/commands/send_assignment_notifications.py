@@ -62,8 +62,7 @@ class Command(BaseCommand):
 
             if dry_run:
                 self.stdout.write(
-                    f"Would send notification to {giver.name} ({giver.email}) - "
-                    f"Assignment: {receiver.name}"
+                    f"Would send notification to {giver.name} ({giver.email}) - Assignment: {receiver.name}"
                 )
                 sent_count += 1
             else:
@@ -72,8 +71,7 @@ class Command(BaseCommand):
                     if success:
                         self.stdout.write(
                             self.style.SUCCESS(
-                                f"✓ Sent assignment to {giver.name} ({giver.email}) - "
-                                f"Assigned to: {receiver.name}"
+                                f"✓ Sent assignment to {giver.name} ({giver.email}) - Assigned to: {receiver.name}"
                             )
                         )
                         # Mark assignment as viewed for tracking
@@ -82,29 +80,19 @@ class Command(BaseCommand):
                         sent_count += 1
                     else:
                         self.stdout.write(
-                            self.style.ERROR(
-                                f"✗ Failed to send assignment to {giver.name} ({giver.email})"
-                            )
+                            self.style.ERROR(f"✗ Failed to send assignment to {giver.name} ({giver.email})")
                         )
                         failed_count += 1
                 except Exception as e:
                     self.stdout.write(
-                        self.style.ERROR(
-                            f"✗ Error sending assignment to {giver.name} ({giver.email}): {e}"
-                        )
+                        self.style.ERROR(f"✗ Error sending assignment to {giver.name} ({giver.email}): {e}")
                     )
                     failed_count += 1
 
         if dry_run:
-            self.stdout.write(
-                self.style.SUCCESS(f"\nDRY RUN Summary: Would send {sent_count} notifications")
-            )
+            self.stdout.write(self.style.SUCCESS(f"\nDRY RUN Summary: Would send {sent_count} notifications"))
         else:
-            self.stdout.write(
-                self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed")
-            )
+            self.stdout.write(self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed"))
 
             if sent_count == assignment_count:
-                self.stdout.write(
-                    self.style.SUCCESS("All assignment notifications sent successfully!")
-                )
+                self.stdout.write(self.style.SUCCESS("All assignment notifications sent successfully!"))

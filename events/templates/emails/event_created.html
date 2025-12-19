@@ -3,69 +3,69 @@
 {% block title %}Your Secret Santa event "{{ event_name }}" has been created!{% endblock %}
 
 {% block content %}
-<div class="greeting">
-    Hi {{ organizer_name }},
-</div>
-
-<p>Congratulations! Your Secret Santa event <strong>"{{ event_name }}"</strong> has been created successfully.</p>
-
-<div class="info-box" style="border-left-color: #22c55e; background-color: #f0fdf4;">
-    <p style="margin: 0;"><strong>✓ Event Created Successfully</strong></p>
-    <p style="margin: 10px 0 0 0;">Your event is ready to go! Share the invite code below with your participants.</p>
-</div>
-
-<div class="info-box">
-    <p><strong>Event Details:</strong></p>
-    <ul style="margin: 10px 0; padding-left: 20px;">
-        <li><strong>Event Name:</strong> {{ event_name }}</li>
-        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
-        {% if registration_deadline %}
-        <li><strong>Registration Deadline:</strong> {{ registration_deadline|date:"F j, Y" }}</li>
-        {% endif %}
-        {% if budget_max %}
-        <li><strong>Suggested Budget:</strong> ${{ budget_max }}</li>
-        {% endif %}
-        <li><strong>Organizer:</strong> {{ organizer_name }} (you)</li>
-    </ul>
-</div>
-
-<div style="background: #fff5f5; padding: 20px; border-radius: 8px; border: 2px solid #e53e3e; margin: 30px 0;">
-    <p style="margin: 0 0 10px 0; color: #991b1b; font-weight: 600;">Share Your Invite Code:</p>
-    <div style="text-align: center; margin: 20px 0;">
-        <div style="font-size: 36px; font-weight: bold; color: #e53e3e; letter-spacing: 4px; padding: 20px; background-color: #ffffff; border-radius: 8px; display: inline-block;">
-            {{ invite_code }}
-        </div>
+    <div class="greeting">
+        Hi {{ organizer_name }},
     </div>
-    <p style="margin: 10px 0 0 0; color: #7c2d12; font-size: 14px;">Participants will use this code to join your event.</p>
-</div>
 
-<p><strong>Share the invite link:</strong></p>
-<div style="background: #f3f4f6; padding: 12px; border-radius: 6px; margin: 10px 0;">
-    <code style="color: #374151; word-break: break-all;">{{ join_url }}</code>
-</div>
+    <p>Congratulations! Your Secret Santa event <strong>"{{ event_name }}"</strong> has been created successfully.</p>
 
-<p><strong>Next Steps:</strong></p>
-<ol style="margin: 10px 0; padding-left: 20px;">
-    <li>Share the invite code or link with your participants</li>
-    <li>Wait for participants to join and confirm</li>
-    <li>Set up exclusion groups if needed (e.g., couples, families)</li>
-    <li>Generate Secret Santa assignments when ready (minimum 3 participants)</li>
-    <li>Assignments will be emailed to each participant automatically</li>
-</ol>
+    <div class="info-box" style="border-left-color: #22c55e; background-color: #f0fdf4;">
+        <p style="margin: 0;"><strong>✓ Event Created Successfully</strong></p>
+        <p style="margin: 10px 0 0 0;">Your event is ready to go! Share the invite code below with your participants.</p>
+    </div>
 
-<div style="text-align: center; margin: 30px 0;">
-    <a href="{{ event_url }}" class="button">
-        Manage Your Event
-    </a>
-</div>
+    <div class="info-box">
+        <p><strong>Event Details:</strong></p>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+            <li><strong>Event Name:</strong> {{ event_name }}</li>
+            <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+            {% if registration_deadline %}
+                <li><strong>Registration Deadline:</strong> {{ registration_deadline|date:"F j, Y" }}</li>
+            {% endif %}
+            {% if budget_max %}
+                <li><strong>Suggested Budget:</strong> ${{ budget_max }}</li>
+            {% endif %}
+            <li><strong>Organizer:</strong> {{ organizer_name }} (you)</li>
+        </ul>
+    </div>
 
-<p><strong>Important Notes:</strong></p>
-<ul style="margin: 10px 0; padding-left: 20px;">
-    <li>You are automatically enrolled as a participant</li>
-    <li>You need at least 3 confirmed participants to generate assignments</li>
-    <li>Participants will receive confirmation emails when they join</li>
-    <li>You can manage exclusions and participant details anytime</li>
-</ul>
+    <div style="background: #fff5f5; padding: 20px; border-radius: 8px; border: 2px solid #e53e3e; margin: 30px 0;">
+        <p style="margin: 0 0 10px 0; color: #991b1b; font-weight: 600;">Share Your Invite Code:</p>
+        <div style="text-align: center; margin: 20px 0;">
+            <div style="font-size: 36px; font-weight: bold; color: #e53e3e; letter-spacing: 4px; padding: 20px; background-color: #ffffff; border-radius: 8px; display: inline-block;">
+                {{ invite_code }}
+            </div>
+        </div>
+        <p style="margin: 10px 0 0 0; color: #7c2d12; font-size: 14px;">Participants will use this code to join your event.</p>
+    </div>
 
-<p>Happy organizing!</p>
-{% endblock %}
+    <p><strong>Share the invite link:</strong></p>
+    <div style="background: #f3f4f6; padding: 12px; border-radius: 6px; margin: 10px 0;">
+        <code style="color: #374151; word-break: break-all;">{{ join_url }}</code>
+    </div>
+
+    <p><strong>Next Steps:</strong></p>
+    <ol style="margin: 10px 0; padding-left: 20px;">
+        <li>Share the invite code or link with your participants</li>
+        <li>Wait for participants to join and confirm</li>
+        <li>Set up exclusion groups if needed (e.g., couples, families)</li>
+        <li>Generate Secret Santa assignments when ready (minimum 3 participants)</li>
+        <li>Assignments will be emailed to each participant automatically</li>
+    </ol>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="{{ event_url }}" class="button">
+            Manage Your Event
+        </a>
+    </div>
+
+    <p><strong>Important Notes:</strong></p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li>You are automatically enrolled as a participant</li>
+        <li>You need at least 3 confirmed participants to generate assignments</li>
+        <li>Participants will receive confirmation emails when they join</li>
+        <li>You can manage exclusions and participant details anytime</li>
+    </ul>
+
+    <p>Happy organizing!</p>
+{% endblock content %}

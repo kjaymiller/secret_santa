@@ -65,9 +65,7 @@ class TestNotificationService:
 
     @patch("events.services.notifications.render_to_string")
     @patch("events.services.notifications.EmailMultiAlternatives")
-    def test_send_email_notification_success(
-        self, mock_email_class, mock_render, notification_service, settings
-    ):
+    def test_send_email_notification_success(self, mock_email_class, mock_render, notification_service, settings):
         """Test sending email notification successfully."""
         settings.DEBUG = True
         mock_render.return_value = "<p>Test email content</p>"
@@ -87,9 +85,7 @@ class TestNotificationService:
 
     @patch("events.services.notifications.render_to_string")
     @patch("events.services.notifications.EmailMultiAlternatives")
-    def test_send_email_notification_failure(
-        self, mock_email_class, mock_render, notification_service, settings
-    ):
+    def test_send_email_notification_failure(self, mock_email_class, mock_render, notification_service, settings):
         """Test email notification failure handling."""
         settings.DEBUG = True
         mock_render.return_value = "<p>Test email content</p>"
@@ -106,9 +102,7 @@ class TestNotificationService:
             )
 
     @patch("events.services.notifications.Client")
-    def test_send_sms_notification_success(
-        self, mock_twilio_client, notification_service, settings
-    ):
+    def test_send_sms_notification_success(self, mock_twilio_client, notification_service, settings):
         """Test sending SMS notification successfully."""
         settings.DEBUG = True
 
@@ -128,9 +122,7 @@ class TestNotificationService:
             )
 
     @patch("events.services.notifications.Client")
-    def test_send_sms_notification_failure(
-        self, mock_twilio_client, notification_service, settings
-    ):
+    def test_send_sms_notification_failure(self, mock_twilio_client, notification_service, settings):
         """Test SMS notification failure handling."""
         settings.DEBUG = False
         settings.TWILIO_ACCOUNT_SID = "test_sid"
@@ -186,9 +178,7 @@ class TestNotificationService:
 
     @patch.object(NotificationService, "send_email_notification")
     @patch.object(NotificationService, "send_sms_notification")
-    def test_send_assignment_notification(
-        self, mock_sms, mock_email, notification_service, event, participant
-    ):
+    def test_send_assignment_notification(self, mock_sms, mock_email, notification_service, event, participant):
         """Test sending assignment notification."""
         receiver = baker.make(
             Participant,
@@ -215,9 +205,7 @@ class TestNotificationService:
 
     @patch.object(NotificationService, "send_email_notification")
     @patch.object(NotificationService, "send_sms_notification")
-    def test_send_invite_notification(
-        self, mock_sms, mock_email, notification_service, participant, event
-    ):
+    def test_send_invite_notification(self, mock_sms, mock_email, notification_service, participant, event):
         """Test sending invite notification."""
         mock_email.return_value = True
         mock_sms.return_value = True
@@ -229,9 +217,7 @@ class TestNotificationService:
         mock_sms.assert_called_once()
 
     @patch.object(NotificationService, "send_email_notification")
-    def test_send_invite_notification_email_only(
-        self, mock_email, notification_service, event
-    ):
+    def test_send_invite_notification_email_only(self, mock_email, notification_service, event):
         """Test sending invite to participant without phone number."""
         participant_no_phone = baker.make(
             Participant,
@@ -251,9 +237,7 @@ class TestNotificationService:
 
     @patch.object(NotificationService, "send_email_notification")
     @patch.object(NotificationService, "send_sms_notification")
-    def test_send_notification_schedule(
-        self, mock_sms, mock_email, notification_service, event, participant
-    ):
+    def test_send_notification_schedule(self, mock_sms, mock_email, notification_service, event, participant):
         """Test sending notification from schedule."""
         notification_schedule = baker.make(
             NotificationSchedule,
@@ -273,9 +257,7 @@ class TestNotificationService:
         assert notification_schedule.is_sent is True
         assert notification_schedule.sent_at is not None
 
-    def test_send_notification_already_sent(
-        self, notification_service, event
-    ):
+    def test_send_notification_already_sent(self, notification_service, event):
         """Test sending notification that was already sent."""
         notification_schedule = baker.make(
             NotificationSchedule,
@@ -289,9 +271,7 @@ class TestNotificationService:
         assert result is False
 
     @patch.object(NotificationService, "send_email_notification")
-    def test_send_notification_email_only(
-        self, mock_email, notification_service, event, participant
-    ):
+    def test_send_notification_email_only(self, mock_email, notification_service, event, participant):
         """Test sending email-only notification."""
         notification_schedule = baker.make(
             NotificationSchedule,
@@ -309,9 +289,7 @@ class TestNotificationService:
         mock_email.assert_called()
 
     @patch.object(NotificationService, "send_sms_notification")
-    def test_send_notification_sms_only(
-        self, mock_sms, notification_service, event, participant
-    ):
+    def test_send_notification_sms_only(self, mock_sms, notification_service, event, participant):
         """Test sending SMS-only notification."""
         notification_schedule = baker.make(
             NotificationSchedule,

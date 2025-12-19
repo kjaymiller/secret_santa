@@ -3,85 +3,85 @@
 {% block title %}Remove Participant - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--deep-red); font-size: 32px; font-weight: 700;">
-            Remove Participant
-        </h1>
-    </div>
-
-    <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--deep-red);">
-        <h2 style="font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-            Are you sure you want to remove {{ object.name }}?
-        </h2>
-
-        <div style="background: #fce8e8; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
-            <p style="color: var(--deep-red); margin-bottom: 8px; font-weight: 500;">
-                This action cannot be undone!
-            </p>
-            <p style="color: var(--soft-gray); font-size: 14px;">
-                Removing this participant will:
-            </p>
-            <ul style="color: var(--soft-gray); font-size: 14px; margin-top: 8px; margin-left: 20px;">
-                <li>Delete their profile and wishlist</li>
-                <li>Remove them from the event</li>
-                {% if object.event.assignments_revealed_at %}
-                    <li style="color: var(--deep-red); font-weight: 500;">Break existing Secret Santa assignments!</li>
-                {% endif %}
-            </ul>
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--deep-red); font-size: 32px; font-weight: 700;">
+                Remove Participant
+            </h1>
         </div>
 
-        {% if object.event.assignments_revealed_at %}
-            <div style="background: #fff3cd; padding: 16px; border-radius: 6px; margin-bottom: 24px; border-left: 4px solid #ffc107;">
-                <p style="color: #856404; font-weight: 500; margin-bottom: 8px;">
-                    Warning: Assignments Already Generated
+        <div style="background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--deep-red);">
+            <h2 style="font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                Are you sure you want to remove {{ object.name }}?
+            </h2>
+
+            <div style="background: #fce8e8; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+                <p style="color: var(--deep-red); margin-bottom: 8px; font-weight: 500;">
+                    This action cannot be undone!
                 </p>
                 <p style="color: var(--soft-gray); font-size: 14px;">
-                    This event already has Secret Santa assignments. Removing this participant will break the assignment chain.
-                    You may need to regenerate all assignments.
+                    Removing this participant will:
                 </p>
-            </div>
-        {% endif %}
-
-        <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
-            <h3 style="font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
-                Participant Details:
-            </h3>
-            <div style="display: grid; gap: 8px; font-size: 14px;">
-                <div>
-                    <strong>Name:</strong> {{ object.name }}
-                </div>
-                <div>
-                    <strong>Email:</strong> {{ object.email }}
-                </div>
-                <div>
-                    <strong>Event:</strong> {{ object.event.name }}
-                </div>
-                <div>
-                    <strong>Status:</strong>
-                    {% if object.is_confirmed %}
-                        <span style="color: var(--pine);">Confirmed</span>
-                    {% else %}
-                        <span style="color: var(--soft-gray);">Pending</span>
+                <ul style="color: var(--soft-gray); font-size: 14px; margin-top: 8px; margin-left: 20px;">
+                    <li>Delete their profile and wishlist</li>
+                    <li>Remove them from the event</li>
+                    {% if object.event.assignments_revealed_at %}
+                        <li style="color: var(--deep-red); font-weight: 500;">Break existing Secret Santa assignments!</li>
                     {% endif %}
-                </div>
-                <div>
-                    <strong>Joined:</strong> {{ object.created_at|date:"M d, Y" }}
-                </div>
+                </ul>
             </div>
-        </div>
 
-        <form method="post">
-            {% csrf_token %}
-            <div style="display: flex; gap: 12px;">
-                <button type="submit" class="btn" style="background: var(--deep-red);">
-                    Yes, Remove Participant
-                </button>
-                <a href="{% url 'events:event-detail' object.event.pk %}" class="btn btn-secondary">
-                    Cancel
-                </a>
+            {% if object.event.assignments_revealed_at %}
+                <div style="background: #fff3cd; padding: 16px; border-radius: 6px; margin-bottom: 24px; border-left: 4px solid #ffc107;">
+                    <p style="color: #856404; font-weight: 500; margin-bottom: 8px;">
+                        Warning: Assignments Already Generated
+                    </p>
+                    <p style="color: var(--soft-gray); font-size: 14px;">
+                        This event already has Secret Santa assignments. Removing this participant will break the assignment chain.
+                        You may need to regenerate all assignments.
+                    </p>
+                </div>
+            {% endif %}
+
+            <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 12px;">
+                    Participant Details:
+                </h3>
+                <div style="display: grid; gap: 8px; font-size: 14px;">
+                    <div>
+                        <strong>Name:</strong> {{ object.name }}
+                    </div>
+                    <div>
+                        <strong>Email:</strong> {{ object.email }}
+                    </div>
+                    <div>
+                        <strong>Event:</strong> {{ object.event.name }}
+                    </div>
+                    <div>
+                        <strong>Status:</strong>
+                        {% if object.is_confirmed %}
+                            <span style="color: var(--pine);">Confirmed</span>
+                        {% else %}
+                            <span style="color: var(--soft-gray);">Pending</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <strong>Joined:</strong> {{ object.created_at|date:"M d, Y" }}
+                    </div>
+                </div>
             </div>
-        </form>
+
+            <form method="post">
+                {% csrf_token %}
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn" style="background: var(--deep-red);">
+                        Yes, Remove Participant
+                    </button>
+                    <a href="{% url 'events:event-detail' object.event.pk %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

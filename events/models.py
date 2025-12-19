@@ -90,13 +90,15 @@ class ExclusionGroup(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="exclusion_groups")
-    name = models.CharField(max_length=100, help_text="Name for this exclusion group (e.g., 'Smith Family', 'Marketing Team')")
+    name = models.CharField(
+        max_length=100, help_text="Name for this exclusion group (e.g., 'Smith Family', 'Marketing Team')"
+    )
     description = models.TextField(blank=True, null=True, help_text="Optional description of this group")
     members = models.ManyToManyField(
         Participant,
         related_name="exclusion_groups",
         blank=True,
-        help_text="Participants in this group will not be assigned to give gifts to each other"
+        help_text="Participants in this group will not be assigned to give gifts to each other",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

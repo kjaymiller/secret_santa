@@ -125,16 +125,16 @@ class NotificationService:
             raise SMSNotificationError("Recipient phone number is required")
 
         if len(message) > 160:
-            logger.warning(f"SMS message exceeds 160 characters ({len(message)} chars), may be split into multiple parts")
+            logger.warning(
+                f"SMS message exceeds 160 characters ({len(message)} chars), may be split into multiple parts"
+            )
 
         try:
             if self.twilio_account_sid and self.twilio_auth_token and not settings.DEBUG:
                 # Use Twilio API for production
                 client = Client(self.twilio_account_sid, self.twilio_auth_token)
 
-                twilio_message = client.messages.create(
-                    body=message, from_=self.twilio_phone_number, to=to_phone
-                )
+                twilio_message = client.messages.create(body=message, from_=self.twilio_phone_number, to=to_phone)
 
                 logger.info(f"SMS sent to {to_phone} via Twilio. SID: {twilio_message.sid}")
             else:
@@ -163,7 +163,6 @@ class NotificationService:
         Raises:
             NotificationError: If notification sending fails
         """
-        from events.models import NotificationSchedule
 
         if notification_schedule.is_sent:
             logger.warning(f"Notification {notification_schedule.id} has already been sent")
@@ -180,7 +179,9 @@ class NotificationService:
             "event_date": event.event_date,
             "invite_code": event.invite_code,
             "budget_max": event.budget_max,
-            "organizer_name": event.organizer.get_full_name() if hasattr(event.organizer, "get_full_name") else str(event.organizer),
+            "organizer_name": event.organizer.get_full_name()
+            if hasattr(event.organizer, "get_full_name")
+            else str(event.organizer),
         }
 
         # Add custom message if provided
@@ -339,7 +340,9 @@ class NotificationService:
             "budget_max": event.budget_max,
             "participant_name": participant.name,
             "registration_deadline": event.registration_deadline,
-            "organizer_name": event.organizer.get_full_name() if hasattr(event.organizer, "get_full_name") else str(event.organizer),
+            "organizer_name": event.organizer.get_full_name()
+            if hasattr(event.organizer, "get_full_name")
+            else str(event.organizer),
         }
 
         success = True
@@ -392,7 +395,9 @@ class NotificationService:
             "budget_max": event.budget_max,
             "participant_name": participant.name,
             "registration_deadline": event.registration_deadline,
-            "organizer_name": event.organizer.get_full_name() if hasattr(event.organizer, "get_full_name") else str(event.organizer),
+            "organizer_name": event.organizer.get_full_name()
+            if hasattr(event.organizer, "get_full_name")
+            else str(event.organizer),
             "confirmation_url": confirmation_url,
         }
 
@@ -443,7 +448,9 @@ class NotificationService:
                 "group_description": exclusion_group.description,
                 "member_count": len(members),
                 "other_members": other_members,
-                "organizer_name": event.organizer.get_full_name() if hasattr(event.organizer, "get_full_name") else str(event.organizer),
+                "organizer_name": event.organizer.get_full_name()
+                if hasattr(event.organizer, "get_full_name")
+                else str(event.organizer),
             }
 
             try:
@@ -477,12 +484,8 @@ class NotificationService:
         organizer = event.organizer
 
         # Build URLs for the email
-        join_url = request.build_absolute_uri(
-            f"/events/join/{event.invite_code}/"
-        )
-        event_url = request.build_absolute_uri(
-            f"/events/{event.pk}/"
-        )
+        join_url = request.build_absolute_uri(f"/events/join/{event.invite_code}/")
+        event_url = request.build_absolute_uri(f"/events/{event.pk}/")
 
         context = {
             "event": event,
@@ -499,7 +502,7 @@ class NotificationService:
         try:
             self.send_email_notification(
                 to_email=organizer.email,
-                subject=f"Your Secret Santa event \"{event.name}\" has been created!",
+                subject=f'Your Secret Santa event "{event.name}" has been created!',
                 template_name="event_created",
                 context=context,
                 to_name=organizer.get_full_name() if hasattr(organizer, "get_full_name") else str(organizer),
@@ -530,7 +533,7 @@ class NotificationService:
         success_count = 0
         failed_count = 0
 
-        organizer_email = event.organizer.email if hasattr(event.organizer, 'email') else None
+        organizer_email = event.organizer.email if hasattr(event.organizer, "email") else None
 
         for participant in participants:
             context = {
@@ -539,7 +542,9 @@ class NotificationService:
                 "event_date": event.event_date,
                 "budget_max": event.budget_max,
                 "participant_name": participant.name,
-                "organizer_name": event.organizer.get_full_name() if hasattr(event.organizer, "get_full_name") else str(event.organizer),
+                "organizer_name": event.organizer.get_full_name()
+                if hasattr(event.organizer, "get_full_name")
+                else str(event.organizer),
                 "organizer_email": organizer_email,
                 "cancellation_message": cancellation_message if cancellation_message else None,
             }

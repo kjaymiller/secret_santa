@@ -3,132 +3,132 @@
 {% block title %}{{ participant.name }} - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
-    <div style="margin-bottom: 30px;">
-        <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-            {{ participant.name }}
-        </h1>
-        <p style="color: var(--soft-gray); font-size: 16px;">
-            Participant in <a href="{% url 'events:event-detail' participant.event.pk %}" style="color: var(--forest-green);">{{ participant.event.name }}</a>
-        </p>
-    </div>
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                {{ participant.name }}
+            </h1>
+            <p style="color: var(--soft-gray); font-size: 16px;">
+                Participant in <a href="{% url 'events:event-detail' participant.event.pk %}" style="color: var(--forest-green);">{{ participant.event.name }}</a>
+            </p>
+        </div>
 
-    <div style="display: grid; gap: 20px;">
-        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
-                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal);">
-                    Participant Information
-                </h2>
+        <div style="display: grid; gap: 20px;">
+            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal);">
+                        Participant Information
+                    </h2>
 
-                <div style="display: flex; gap: 8px;">
-                    {% if participant.is_confirmed %}
-                        <span style="padding: 6px 12px; background: var(--pine); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                            Confirmed
-                        </span>
-                    {% else %}
-                        <span style="padding: 6px 12px; background: var(--soft-gray); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                            Pending Confirmation
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div style="display: grid; gap: 16px;">
-                <div>
-                    <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
-                        Name
-                    </strong>
-                    <p style="color: var(--charcoal); font-size: 16px;">
-                        {{ participant.name }}
-                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        {% if participant.is_confirmed %}
+                            <span style="padding: 6px 12px; background: var(--pine); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                                Confirmed
+                            </span>
+                        {% else %}
+                            <span style="padding: 6px 12px; background: var(--soft-gray); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                                Pending Confirmation
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div>
-                    <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
-                        Email
-                    </strong>
-                    <p style="color: var(--charcoal); font-size: 16px;">
-                        {{ participant.email }}
-                    </p>
-                </div>
-
-                {% if participant.phone_number %}
+                <div style="display: grid; gap: 16px;">
                     <div>
                         <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
-                            Phone Number
+                            Name
                         </strong>
                         <p style="color: var(--charcoal); font-size: 16px;">
-                            {{ participant.phone_number }}
+                            {{ participant.name }}
                         </p>
+                    </div>
+
+                    <div>
+                        <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
+                            Email
+                        </strong>
+                        <p style="color: var(--charcoal); font-size: 16px;">
+                            {{ participant.email }}
+                        </p>
+                    </div>
+
+                    {% if participant.phone_number %}
+                        <div>
+                            <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
+                                Phone Number
+                            </strong>
+                            <p style="color: var(--charcoal); font-size: 16px;">
+                                {{ participant.phone_number }}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
+                            Joined
+                        </strong>
+                        <p style="color: var(--charcoal); font-size: 16px;">
+                            {{ participant.created_at|date:"M d, Y \a\t g:i A" }}
+                        </p>
+                    </div>
+                </div>
+
+                {% if not participant.is_confirmed %}
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <div style="background: var(--cream); padding: 16px; border-radius: 6px; border-left: 4px solid var(--forest-green);">
+                            <p style="margin: 0; color: var(--charcoal);">
+                                <strong>Confirmation Required</strong><br>
+                                Please check your email ({{ participant.email }}) for a confirmation link to complete your registration.
+                            </p>
+                        </div>
                     </div>
                 {% endif %}
-
-                <div>
-                    <strong style="display: block; color: var(--soft-gray); font-size: 14px; margin-bottom: 4px;">
-                        Joined
-                    </strong>
-                    <p style="color: var(--charcoal); font-size: 16px;">
-                        {{ participant.created_at|date:"M d, Y \a\t g:i A" }}
-                    </p>
-                </div>
             </div>
 
-            {% if not participant.is_confirmed %}
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-                    <div style="background: var(--cream); padding: 16px; border-radius: 6px; border-left: 4px solid var(--forest-green);">
-                        <p style="margin: 0; color: var(--charcoal);">
-                            <strong>Confirmation Required</strong><br>
-                            Please check your email ({{ participant.email }}) for a confirmation link to complete your registration.
-                        </p>
+            {% if participant.wishlist %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                        Gift Wishlist
+                    </h2>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 6px;">
+                        <p style="color: var(--charcoal); white-space: pre-wrap;">{{ participant.wishlist }}</p>
                     </div>
                 </div>
             {% endif %}
-        </div>
 
-        {% if participant.wishlist %}
-            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-                    Gift Wishlist
-                </h2>
-                <div style="background: var(--cream); padding: 16px; border-radius: 6px;">
-                    <p style="color: var(--charcoal); white-space: pre-wrap;">{{ participant.wishlist }}</p>
+            {% if participant.event.assignments_revealed_at %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                        Secret Santa Assignment
+                    </h2>
+                    <p style="color: var(--soft-gray); margin-bottom: 16px;">
+                        Assignments have been generated! Click below to view who you're buying a gift for.
+                    </p>
+                    <a href="{% url 'events:my-assignment' participant.event.pk participant.pk %}" class="btn">
+                        View My Assignment
+                    </a>
                 </div>
-            </div>
-        {% endif %}
-
-        {% if participant.event.assignments_revealed_at %}
-            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-                    Secret Santa Assignment
-                </h2>
-                <p style="color: var(--soft-gray); margin-bottom: 16px;">
-                    Assignments have been generated! Click below to view who you're buying a gift for.
-                </p>
-                <a href="{% url 'events:my-assignment' participant.event.pk participant.pk %}" class="btn">
-                    View My Assignment
-                </a>
-            </div>
-        {% else %}
-            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-                    Assignment Status
-                </h2>
-                <p style="color: var(--soft-gray);">
-                    Assignments have not been generated yet. You'll receive an email when they're ready!
-                </p>
-            </div>
-        {% endif %}
-
-        <div style="display: flex; gap: 12px;">
-            <a href="{% url 'events:participant-update' participant.pk %}" class="btn btn-secondary">
-                Edit Profile
-            </a>
-            {% if user.is_authenticated and participant.event.organizer == user %}
-                <a href="{% url 'events:event-detail' participant.event.pk %}" class="btn btn-secondary">
-                    Back to Event
-                </a>
+            {% else %}
+                <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
+                        Assignment Status
+                    </h2>
+                    <p style="color: var(--soft-gray);">
+                        Assignments have not been generated yet. You'll receive an email when they're ready!
+                    </p>
+                </div>
             {% endif %}
+
+            <div style="display: flex; gap: 12px;">
+                <a href="{% url 'events:participant-update' participant.pk %}" class="btn btn-secondary">
+                    Edit Profile
+                </a>
+                {% if user.is_authenticated and participant.event.organizer == user %}
+                    <a href="{% url 'events:event-detail' participant.event.pk %}" class="btn btn-secondary">
+                        Back to Event
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

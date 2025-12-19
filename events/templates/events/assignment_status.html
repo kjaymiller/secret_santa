@@ -3,144 +3,144 @@
 {% block title %}Assignment Status - {{ event.name }}{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
-        <div>
-            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-                Assignment Status
-            </h1>
-            <p style="color: var(--soft-gray); font-size: 16px;">
-                {{ event.name }}
-            </p>
-        </div>
-        <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">
-            Back to Event
-        </a>
-    </div>
-
-    <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
-        <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
-            Overview
-        </h2>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-            <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 36px; font-weight: 700; color: var(--forest-green); margin-bottom: 8px;">
-                    {{ total_count }}
-                </div>
-                <div style="color: var(--soft-gray); font-size: 14px;">
-                    Total Assignments
-                </div>
-            </div>
-
-            <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 36px; font-weight: 700; color: var(--pine); margin-bottom: 8px;">
-                    {{ viewed_count }}
-                </div>
-                <div style="color: var(--soft-gray); font-size: 14px;">
-                    Viewed
-                </div>
-            </div>
-
-            <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 36px; font-weight: 700; color: var(--soft-gray); margin-bottom: 8px;">
-                    {{ total_count|add:"-"|add:viewed_count }}
-                </div>
-                <div style="color: var(--soft-gray); font-size: 14px;">
-                    Not Viewed Yet
-                </div>
-            </div>
-
-            <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 36px; font-weight: 700; color: var(--gold); margin-bottom: 8px;">
-                    {% widthratio viewed_count total_count 100 %}%
-                </div>
-                <div style="color: var(--soft-gray); font-size: 14px;">
-                    Completion Rate
-                </div>
-            </div>
-        </div>
-
-        {% if event.assignments_revealed_at %}
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-                <p style="color: var(--soft-gray); font-size: 14px;">
-                    <strong>Assignments Generated:</strong>
-                    {{ event.assignments_revealed_at|date:"l, F d, Y \a\t g:i A" }}
+    <div style="margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+            <div>
+                <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                    Assignment Status
+                </h1>
+                <p style="color: var(--soft-gray); font-size: 16px;">
+                    {{ event.name }}
                 </p>
             </div>
-        {% endif %}
-    </div>
+            <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">
+                Back to Event
+            </a>
+        </div>
 
-    <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
-        <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
-            Assignment Tracking
-        </h2>
+        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+                Overview
+            </h2>
 
-        <div style="background: #fff3cd; padding: 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
-            <p style="color: #856404; font-size: 14px;">
-                <strong>Privacy Note:</strong> As the organizer, you can see which participants have viewed their assignments,
-                but you cannot see the actual gift pairings. This maintains the Secret Santa surprise!
-            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: var(--forest-green); margin-bottom: 8px;">
+                        {{ total_count }}
+                    </div>
+                    <div style="color: var(--soft-gray); font-size: 14px;">
+                        Total Assignments
+                    </div>
+                </div>
+
+                <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: var(--pine); margin-bottom: 8px;">
+                        {{ viewed_count }}
+                    </div>
+                    <div style="color: var(--soft-gray); font-size: 14px;">
+                        Viewed
+                    </div>
+                </div>
+
+                <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: var(--soft-gray); margin-bottom: 8px;">
+                        {{ total_count|add:"-"|add:viewed_count }}
+                    </div>
+                    <div style="color: var(--soft-gray); font-size: 14px;">
+                        Not Viewed Yet
+                    </div>
+                </div>
+
+                <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: var(--gold); margin-bottom: 8px;">
+                        {% widthratio viewed_count total_count 100 %}%
+                    </div>
+                    <div style="color: var(--soft-gray); font-size: 14px;">
+                        Completion Rate
+                    </div>
+                </div>
+            </div>
+
+            {% if event.assignments_revealed_at %}
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <p style="color: var(--soft-gray); font-size: 14px;">
+                        <strong>Assignments Generated:</strong>
+                        {{ event.assignments_revealed_at|date:"l, F d, Y \a\t g:i A" }}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+                Assignment Tracking
+            </h2>
+
+            <div style="background: #fff3cd; padding: 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                <p style="color: #856404; font-size: 14px;">
+                    <strong>Privacy Note:</strong> As the organizer, you can see which participants have viewed their assignments,
+                    but you cannot see the actual gift pairings. This maintains the Secret Santa surprise!
+                </p>
+            </div>
+
+            {% if assignments %}
+                <div style="display: grid; gap: 12px;">
+                    {% for assignment in assignments %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--cream); border-radius: 6px;">
+                            <div style="flex: 1;">
+                                <strong style="color: var(--charcoal); font-size: 16px;">
+                                    {{ assignment.giver.name }}
+                                </strong>
+                                <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
+                                    {{ assignment.giver.email }}
+                                </span>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                {% if assignment.is_viewed %}
+                                    <div>
+                                        <span style="padding: 6px 12px; background: var(--pine); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                                            Viewed
+                                        </span>
+                                        {% if assignment.viewed_at %}
+                                            <span style="color: var(--soft-gray); font-size: 12px; margin-left: 8px;">
+                                                {{ assignment.viewed_at|date:"M d, g:i A" }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <span style="padding: 6px 12px; background: var(--soft-gray); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                                        Not Viewed
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="text-align: center; color: var(--soft-gray); padding: 30px;">
+                    No assignments have been generated yet.
+                </p>
+            {% endif %}
         </div>
 
         {% if assignments %}
-            <div style="display: grid; gap: 12px;">
-                {% for assignment in assignments %}
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--cream); border-radius: 6px;">
-                        <div style="flex: 1;">
-                            <strong style="color: var(--charcoal); font-size: 16px;">
-                                {{ assignment.giver.name }}
-                            </strong>
-                            <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
-                                {{ assignment.giver.email }}
-                            </span>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            {% if assignment.is_viewed %}
-                                <div>
-                                    <span style="padding: 6px 12px; background: var(--pine); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                                        Viewed
-                                    </span>
-                                    {% if assignment.viewed_at %}
-                                        <span style="color: var(--soft-gray); font-size: 12px; margin-left: 8px;">
-                                            {{ assignment.viewed_at|date:"M d, g:i A" }}
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                                <span style="padding: 6px 12px; background: var(--soft-gray); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                                    Not Viewed
-                                </span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--pine);">
+                <h3 style="font-size: 18px; font-weight: 600; color: var(--forest-green); margin-bottom: 12px;">
+                    Next Steps
+                </h3>
+                <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
+                    <li style="margin-bottom: 8px;">
+                        Participants who haven't viewed their assignments will receive reminder notifications (if configured)
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        You can manage notification schedules from the event detail page
+                    </li>
+                    <li>
+                        Make sure all participants know the exchange date: <strong style="color: var(--forest-green);">{{ event.exchange_date|date:"l, F d, Y" }}</strong>
+                    </li>
+                </ul>
             </div>
-        {% else %}
-            <p style="text-align: center; color: var(--soft-gray); padding: 30px;">
-                No assignments have been generated yet.
-            </p>
         {% endif %}
     </div>
-
-    {% if assignments %}
-        <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--pine);">
-            <h3 style="font-size: 18px; font-weight: 600; color: var(--forest-green); margin-bottom: 12px;">
-                Next Steps
-            </h3>
-            <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
-                <li style="margin-bottom: 8px;">
-                    Participants who haven't viewed their assignments will receive reminder notifications (if configured)
-                </li>
-                <li style="margin-bottom: 8px;">
-                    You can manage notification schedules from the event detail page
-                </li>
-                <li>
-                    Make sure all participants know the exchange date: <strong style="color: var(--forest-green);">{{ event.exchange_date|date:"l, F d, Y" }}</strong>
-                </li>
-            </ul>
-        </div>
-    {% endif %}
-</div>
-{% endblock %}
+{% endblock content %}

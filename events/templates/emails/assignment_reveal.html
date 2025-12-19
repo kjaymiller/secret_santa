@@ -3,54 +3,54 @@
 {% block title %}Your Secret Santa Assignment - {{ event_name }}{% endblock %}
 
 {% block content %}
-<div class="greeting">
-    Hi {{ participant_name }},
-</div>
-
-<p>The moment you've been waiting for is here! Your Secret Santa assignment for <strong>{{ event_name }}</strong> is ready.</p>
-
-<div style="text-align: center; margin: 30px 0;">
-    <div style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); color: white; padding: 30px; border-radius: 12px;">
-        <p style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">You're giving a gift to:</p>
-        <p style="margin: 0; font-size: 36px; font-weight: bold;">{{ assignment_name }}</p>
+    <div class="greeting">
+        Hi {{ participant_name }},
     </div>
-</div>
 
-<div class="info-box">
-    <p><strong>Event Details:</strong></p>
+    <p>The moment you've been waiting for is here! Your Secret Santa assignment for <strong>{{ event_name }}</strong> is ready.</p>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <div style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); color: white; padding: 30px; border-radius: 12px;">
+            <p style="margin: 0 0 10px 0; font-size: 16px; opacity: 0.9;">You're giving a gift to:</p>
+            <p style="margin: 0; font-size: 36px; font-weight: bold;">{{ assignment_name }}</p>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>Event Details:</strong></p>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+            <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+            {% if budget_max %}
+                <li><strong>Budget:</strong> Up to ${{ budget_max }}</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    {% if wishlist %}
+        <div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <p style="margin-top: 0;"><strong>{{ assignment_name }}'s Wishlist:</strong></p>
+            <div style="white-space: pre-wrap;">{{ wishlist }}</div>
+        </div>
+    {% else %}
+        <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Note:</strong> {{ assignment_name }} hasn't added a wishlist yet. Check back later or get creative!</p>
+        </div>
+    {% endif %}
+
+    <p><strong>Important Reminders:</strong></p>
     <ul style="margin: 10px 0; padding-left: 20px;">
-        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
-        {% if budget_max %}
-        <li><strong>Budget:</strong> Up to ${{ budget_max }}</li>
-        {% endif %}
+        <li>Keep your assignment secret! Don't tell anyone who you're giving to.</li>
+        <li>Try to stay within the budget if one was set.</li>
+        <li>Make sure to have your gift ready by {{ event_date|date:"F j, Y" }}.</li>
+        <li>Have fun and spread holiday cheer!</li>
     </ul>
-</div>
 
-{% if wishlist %}
-<div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
-    <p style="margin-top: 0;"><strong>{{ assignment_name }}'s Wishlist:</strong></p>
-    <div style="white-space: pre-wrap;">{{ wishlist }}</div>
-</div>
-{% else %}
-<div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
-    <p style="margin: 0;"><strong>Note:</strong> {{ assignment_name }} hasn't added a wishlist yet. Check back later or get creative!</p>
-</div>
-{% endif %}
+    {% if custom_message %}
+        <div class="info-box">
+            <p><strong>Message from the organizer:</strong></p>
+            <p>{{ custom_message }}</p>
+        </div>
+    {% endif %}
 
-<p><strong>Important Reminders:</strong></p>
-<ul style="margin: 10px 0; padding-left: 20px;">
-    <li>Keep your assignment secret! Don't tell anyone who you're giving to.</li>
-    <li>Try to stay within the budget if one was set.</li>
-    <li>Make sure to have your gift ready by {{ event_date|date:"F j, Y" }}.</li>
-    <li>Have fun and spread holiday cheer!</li>
-</ul>
-
-{% if custom_message %}
-<div class="info-box">
-    <p><strong>Message from the organizer:</strong></p>
-    <p>{{ custom_message }}</p>
-</div>
-{% endif %}
-
-<p>Happy shopping and happy Secret Santa!</p>
-{% endblock %}
+    <p>Happy shopping and happy Secret Santa!</p>
+{% endblock content %}

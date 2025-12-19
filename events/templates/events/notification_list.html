@@ -3,117 +3,117 @@
 {% block title %}Notifications - {{ event.name }}{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
-        <div>
-            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-                Notification Schedules
-            </h1>
-            <p style="color: var(--soft-gray); font-size: 16px;">
-                {{ event.name }}
+    <div style="margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+            <div>
+                <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                    Notification Schedules
+                </h1>
+                <p style="color: var(--soft-gray); font-size: 16px;">
+                    {{ event.name }}
+                </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'events:notification-create' event.pk %}" class="btn">Schedule Notification</a>
+                <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">Back to Event</a>
+            </div>
+        </div>
+
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #1976d2; margin-bottom: 24px;">
+            <h3 style="font-size: 18px; font-weight: 600; color: #1565c0; margin-bottom: 12px;">
+                About Notifications
+            </h3>
+            <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 8px;">
+                Schedule automatic email or SMS notifications to remind participants about:
             </p>
+            <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
+                <li>Viewing their Secret Santa assignments</li>
+                <li>Upcoming exchange dates</li>
+                <li>Important event updates</li>
+            </ul>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <a href="{% url 'events:notification-create' event.pk %}" class="btn">Schedule Notification</a>
-            <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">Back to Event</a>
-        </div>
-    </div>
 
-    <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #1976d2; margin-bottom: 24px;">
-        <h3 style="font-size: 18px; font-weight: 600; color: #1565c0; margin-bottom: 12px;">
-            About Notifications
-        </h3>
-        <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 8px;">
-            Schedule automatic email or SMS notifications to remind participants about:
-        </p>
-        <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
-            <li>Viewing their Secret Santa assignments</li>
-            <li>Upcoming exchange dates</li>
-            <li>Important event updates</li>
-        </ul>
-    </div>
+        {% if notifications %}
+            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+                    Scheduled Notifications ({{ notifications.count }})
+                </h2>
 
-    {% if notifications %}
-        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
-                Scheduled Notifications ({{ notifications.count }})
-            </h2>
+                <div style="display: grid; gap: 16px;">
+                    {% for notification in notifications %}
+                        <div style="padding: 20px; background: var(--cream); border-radius: 8px; {% if notification.is_sent %}opacity: 0.6;{% endif %}">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                        <h3 style="font-size: 18px; font-weight: 600; color: var(--charcoal);">
+                                            {{ notification.get_notification_type_display }}
+                                        </h3>
 
-            <div style="display: grid; gap: 16px;">
-                {% for notification in notifications %}
-                    <div style="padding: 20px; background: var(--cream); border-radius: 8px; {% if notification.is_sent %}opacity: 0.6;{% endif %}">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                                    <h3 style="font-size: 18px; font-weight: 600; color: var(--charcoal);">
-                                        {{ notification.get_notification_type_display }}
-                                    </h3>
+                                        {% if notification.is_sent %}
+                                            <span style="padding: 4px 10px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                                Sent
+                                            </span>
+                                        {% else %}
+                                            <span style="padding: 4px 10px; background: var(--gold); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                                Scheduled
+                                            </span>
+                                        {% endif %}
 
-                                    {% if notification.is_sent %}
-                                        <span style="padding: 4px 10px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
-                                            Sent
-                                        </span>
-                                    {% else %}
-                                        <span style="padding: 4px 10px; background: var(--gold); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
-                                            Scheduled
-                                        </span>
-                                    {% endif %}
-
-                                    <span style="padding: 4px 10px; background: white; border-radius: 12px; font-size: 11px; font-weight: 500; text-transform: uppercase;">
-                                        {{ notification.delivery_method }}
-                                    </span>
-                                </div>
-
-                                {% if notification.message %}
-                                    <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 12px;">
-                                        {{ notification.message|truncatewords:20 }}
-                                    </p>
-                                {% endif %}
-
-                                <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px;">
-                                    <div>
-                                        <strong style="color: var(--soft-gray);">Scheduled For:</strong>
-                                        <span style="color: var(--charcoal);">
-                                            {{ notification.scheduled_time|date:"M d, Y \a\t g:i A" }}
+                                        <span style="padding: 4px 10px; background: white; border-radius: 12px; font-size: 11px; font-weight: 500; text-transform: uppercase;">
+                                            {{ notification.delivery_method }}
                                         </span>
                                     </div>
 
-                                    {% if notification.is_sent and notification.sent_at %}
+                                    {% if notification.message %}
+                                        <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 12px;">
+                                            {{ notification.message|truncatewords:20 }}
+                                        </p>
+                                    {% endif %}
+
+                                    <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px;">
                                         <div>
-                                            <strong style="color: var(--soft-gray);">Sent At:</strong>
+                                            <strong style="color: var(--soft-gray);">Scheduled For:</strong>
                                             <span style="color: var(--charcoal);">
-                                                {{ notification.sent_at|date:"M d, Y \a\t g:i A" }}
+                                                {{ notification.scheduled_time|date:"M d, Y \a\t g:i A" }}
                                             </span>
                                         </div>
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            {% if not notification.is_sent %}
-                                <div style="display: flex; gap: 8px;">
-                                    <a href="{% url 'events:notification-update' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">
-                                        Edit
-                                    </a>
-                                    <a href="{% url 'events:notification-delete' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px; color: var(--deep-red); border-color: var(--deep-red);">
-                                        Delete
-                                    </a>
+                                        {% if notification.is_sent and notification.sent_at %}
+                                            <div>
+                                                <strong style="color: var(--soft-gray);">Sent At:</strong>
+                                                <span style="color: var(--charcoal);">
+                                                    {{ notification.sent_at|date:"M d, Y \a\t g:i A" }}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            {% endif %}
+
+                                {% if not notification.is_sent %}
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="{% url 'events:notification-update' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">
+                                            Edit
+                                        </a>
+                                        <a href="{% url 'events:notification-delete' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px; color: var(--deep-red); border-color: var(--deep-red);">
+                                            Delete
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% else %}
-        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
-            <div style="font-size: 48px; margin-bottom: 16px;">📧</div>
-            <p style="font-size: 18px; color: var(--soft-gray); margin-bottom: 20px;">
-                No notifications scheduled yet
-            </p>
-            <a href="{% url 'events:notification-create' event.pk %}" class="btn">
-                Create Your First Notification
-            </a>
-        </div>
-    {% endif %}
-</div>
-{% endblock %}
+        {% else %}
+            <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📧</div>
+                <p style="font-size: 18px; color: var(--soft-gray); margin-bottom: 20px;">
+                    No notifications scheduled yet
+                </p>
+                <a href="{% url 'events:notification-create' event.pk %}" class="btn">
+                    Create Your First Notification
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

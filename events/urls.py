@@ -92,7 +92,11 @@ public_urlpatterns = [
     path("participant/<uuid:pk>/", views.ParticipantDetailView.as_view(), name="participant-detail"),
     path("participant/<uuid:pk>/edit/", views.ParticipantUpdateView.as_view(), name="participant-update"),
     path("participant/<uuid:pk>/confirm/", views.ParticipantConfirmView.as_view(), name="participant-confirm"),
-    path("participant/confirm/<str:token>/", views.ParticipantConfirmEmailView.as_view(), name="participant-confirm-email"),
+    path(
+        "participant/confirm/<str:token>/",
+        views.ParticipantConfirmEmailView.as_view(),
+        name="participant-confirm-email",
+    ),
     path("participant/<uuid:pk>/remove/", views.ParticipantRemoveView.as_view(), name="participant-remove"),
 ]
 

@@ -66,9 +66,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.ERROR(f"✗ Error sending to {participant.email}: {e}"))
                     failed_count += 1
 
-            self.stdout.write(
-                self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed")
-            )
+            self.stdout.write(self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed"))
 
         elif emails_str:
             # Send to specific email addresses
@@ -101,9 +99,7 @@ class Command(BaseCommand):
                         )
                         success = notification_service.send_invite_notification(participant, event)
                         if success:
-                            self.stdout.write(
-                                self.style.SUCCESS(f"✓ Created participant and sent invite to {email}")
-                            )
+                            self.stdout.write(self.style.SUCCESS(f"✓ Created participant and sent invite to {email}"))
                             sent_count += 1
                         else:
                             self.stdout.write(self.style.ERROR(f"✗ Failed to send invite to {email}"))
@@ -113,9 +109,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.ERROR(f"✗ Error sending to {email}: {e}"))
                     failed_count += 1
 
-            self.stdout.write(
-                self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed")
-            )
+            self.stdout.write(self.style.SUCCESS(f"\nSummary: {sent_count} sent, {failed_count} failed"))
 
         else:
             raise CommandError("Please specify either --emails or --all")
