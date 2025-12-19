@@ -9,6 +9,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from .forms import (
     EventForm,
+    EventInviteForm,
     ExclusionGroupForm,
     InviteCodeForm,
     NotificationScheduleForm,
@@ -69,7 +70,73 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         context["confirmed_participants"] = event.participants.filter(is_confirmed=True)
         context["assignments_count"] = event.assignments.count()
         context["can_generate_assignments"] = event.participants.filter(is_confirmed=True).count() >= 3
+        if self.request.user == event.organizer:
+            context["invite_form"] = EventInviteForm()
         return context
+
+
+class EventSendInvitesView(LoginRequiredMixin, View):
+    """Send invites to email addresses for a specific event."""
+
+    def post(self, request, pk):
+        from events.services.notifications import get_notification_service
+
+        event = get_object_or_404(Event, pk=pk, organizer=request.user)
+        form = EventInviteForm(request.POST)
+
+        if form.is_valid():
+            emails = form.cleaned_data["emails"]
+            invited_count = 0
+            existing_count = 0
+            notification_service = get_notification_service()
+
+            for email in emails:
+                # Check if participant already exists
+                participant, created = Participant.objects.get_or_create(
+                    event=event,
+                    email=email,
+                    defaults={
+                        "name": email.split("@")[0],  # Default name from email
+                        "is_confirmed": False,
+                    },
+                )
+
+                if created:
+                    invited_count += 1
+                    # Send invite notification
+                    try:
+                        notification_service.send_invite_notification(participant, event)
+                    except Exception:
+                        # Log error but continue sending to others
+                        pass
+                else:
+                    existing_count += 1
+                    # Optional: Resend invite if not confirmed?
+                    # For now, we'll just skip if they already exist
+                    if not participant.is_confirmed:
+                        try:
+                            notification_service.send_invite_notification(participant, event)
+                            invited_count += 1 # Count as invited if we resent the invite
+                            existing_count -= 1 # Move from existing to invited bucket for feedback
+                        except Exception:
+                            pass
+
+            message_parts = []
+            if invited_count > 0:
+                message_parts.append(f"Sent invites to {invited_count} people.")
+            if existing_count > 0:
+                message_parts.append(f"{existing_count} people were already in the list.")
+
+            if message_parts:
+                messages.success(request, " ".join(message_parts))
+            else:
+                messages.info(request, "No new invites were sent.")
+
+        else:
+            for error in form.errors.values():
+                messages.error(request, error)
+
+        return redirect("events:event-detail", pk=pk)
 
 
 class EventCreateView(LoginRequiredMixin, CreateView):

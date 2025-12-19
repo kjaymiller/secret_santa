@@ -28,6 +28,50 @@ class InviteCodeForm(forms.Form):
         return invite_code
 
 
+class EventInviteForm(forms.Form):
+    """Form for sending event invites to email addresses."""
+
+    emails = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Enter email addresses separated by commas or newlines (e.g., alice@example.com, bob@example.com)",
+            }
+        ),
+        help_text="Enter one or more email addresses. We'll send them an invite with a link to join.",
+    )
+
+    def clean_emails(self):
+        emails_text = self.cleaned_data.get("emails", "")
+        # Split by comma or newline
+        import re
+
+        raw_emails = re.split(r"[,\n\r]+", emails_text)
+        valid_emails = []
+        invalid_emails = []
+
+        for email in raw_emails:
+            email = email.strip()
+            if not email:
+                continue
+            try:
+                forms.EmailField().clean(email)
+                valid_emails.append(email)
+            except ValidationError:
+                invalid_emails.append(email)
+
+        if invalid_emails:
+            raise ValidationError(
+                f"The following email addresses are invalid: {', '.join(invalid_emails)}"
+            )
+
+        if not valid_emails:
+            raise ValidationError("Please enter at least one valid email address.")
+
+        return valid_emails
+
+
 class EventForm(forms.ModelForm):
     """Form for creating/updating events."""
 

@@ -10,6 +10,7 @@ urlpatterns = [
     path("create/", views.EventCreateView.as_view(), name="event-create"),
     path("<uuid:pk>/", views.EventDetailView.as_view(), name="event-detail"),
     path("<uuid:pk>/edit/", views.EventUpdateView.as_view(), name="event-update"),
+    path("<uuid:pk>/invite/", views.EventSendInvitesView.as_view(), name="event-send-invites"),
     path("<uuid:pk>/delete/", views.EventDeleteView.as_view(), name="event-delete"),
     # Assignment URLs
     path(

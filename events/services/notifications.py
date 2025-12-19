@@ -250,16 +250,21 @@ class NotificationService:
         SMS messages are kept under 160 characters to avoid multi-part messages.
         """
         event_name = context["event_name"]
-        invite_code = context["invite_code"]
+        invite_code = context.get("invite_code", "")
 
-        messages = {
-            "registration_reminder": f"Don't forget to join {event_name}! Use code: {invite_code}",
-            "assignment_reveal": f"Your Secret Santa assignment for {event_name} is ready! Check your email for details.",
-            "event_reminder": f"Reminder: {event_name} is on {context['event_date']}. Happy gifting!",
-            "custom": context.get("custom_message", f"Update from {event_name}. Check your email for details."),
-        }
-
-        message = messages.get(notification_type, f"Notification from {event_name}")
+        if notification_type == "registration_reminder":
+            message = f"Don't forget to join {event_name}! Use code: {invite_code}"
+        elif notification_type == "assignment_reveal":
+            message = f"Your Secret Santa assignment for {event_name} is ready! Check your email for details."
+        elif notification_type == "event_reminder":
+            event_date = context.get("event_date", "upcoming date")
+            message = f"Reminder: {event_name} is on {event_date}. Happy gifting!"
+        elif notification_type == "custom":
+            message = context.get(
+                "custom_message", f"Update from {event_name}. Check your email for details."
+            )
+        else:
+            message = f"Notification from {event_name}"
 
         # Truncate if necessary (shouldn't happen with our predefined messages)
         if len(message) > 160:

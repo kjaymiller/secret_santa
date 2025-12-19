@@ -57,27 +57,51 @@
                 </div>
             </div>
 
-            <div class="card">
-                <h2 class="text-xl font-semibold text-charcoal mb-4">Invite Link</h2>
+            <div class="flex flex-col gap-5">
+                <div class="card">
+                    <h2 class="text-xl font-semibold text-charcoal mb-4">Invite Link</h2>
 
-                <p class="text-gray text-sm mb-3">
-                    Share this code or link with participants:
-                </p>
+                    <p class="text-gray text-sm mb-3">
+                        Share this code or link with participants:
+                    </p>
 
-                <div class="invite-code-box">
-                    <strong class="block text-xs text-gray mb-1">
-                        Invite Code:
-                    </strong>
-                    <code class="invite-code">
-                        {{ event.invite_code }}
-                    </code>
+                    <div class="invite-code-box">
+                        <strong class="block text-xs text-gray mb-1">
+                            Invite Code:
+                        </strong>
+                        <code class="invite-code">
+                            {{ event.invite_code }}
+                        </code>
+                    </div>
+
+                    <div class="bg-cream p-3 rounded break-all">
+                        <a href="{% url 'events:join-event' event.invite_code %}" class="text-forest text-sm">
+                            {{ request.scheme }}://{{ request.get_host }}{% url 'events:join-event' event.invite_code %}
+                        </a>
+                    </div>
                 </div>
 
-                <div class="bg-cream p-3 rounded break-all">
-                    <a href="{% url 'events:join-event' event.invite_code %}" class="text-forest text-sm">
-                        {{ request.scheme }}://{{ request.get_host }}{% url 'events:join-event' event.invite_code %}
-                    </a>
+                {% if invite_form %}
+                <div class="card">
+                    <h2 class="text-xl font-semibold text-charcoal mb-4">Send Invites</h2>
+                    <p class="text-gray text-sm mb-3">
+                        Enter email addresses to send invites directly.
+                    </p>
+                    <form method="post" action="{% url 'events:event-send-invites' event.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ invite_form.emails }}
+                            {% if invite_form.emails.help_text %}
+                                <p class="text-xs text-gray mt-1">{{ invite_form.emails.help_text }}</p>
+                            {% endif %}
+                            {% for error in invite_form.emails.errors %}
+                                <p class="text-xs text-red mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn w-full">Send Invites</button>
+                    </form>
                 </div>
+                {% endif %}
             </div>
         </div>
 
