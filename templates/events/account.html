@@ -7,8 +7,39 @@
         <h1>My Account</h1>
 
         <div class="account-section">
-            <h2>Profile</h2>
-            <p><strong>Email:</strong> {{ user.email }}</p>
+            <h2>Profile Settings</h2>
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    <div class="form-text">{{ form.email.help_text }}</div>
+                    {% for error in form.email.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.phone_number.id_for_label }}" class="form-label">{{ form.phone_number.label }}</label>
+                    {{ form.phone_number }}
+                    <div class="form-text">{{ form.phone_number.help_text }}</div>
+                    {% for error in form.phone_number.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.notification_preference.id_for_label }}" class="form-label">{{ form.notification_preference.label }}</label>
+                    {{ form.notification_preference }}
+                    <div class="form-text">{{ form.notification_preference.help_text }}</div>
+                    {% for error in form.notification_preference.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
         </div>
 
         <div class="account-section">
@@ -17,19 +48,7 @@
             <a href="{% url 'account_change_password' %}" class="btn btn-secondary">Change Password</a>
         </div>
 
-    <!-- Placeholders for future tasks -->
-        <div class="account-section">
-            <h2>Notifications</h2>
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="{{ form.notification_preference.id_for_label }}" class="form-label">{{ form.notification_preference.label }}</label>
-                    {{ form.notification_preference }}
-                    <div class="form-text">{{ form.notification_preference.help_text }}</div>
-                </div>
-                <button type="submit" class="btn btn-primary">Save Preferences</button>
-            </form>
-        </div>
+
 
         <div class="account-section danger-zone">
             <h2>Danger Zone</h2>

@@ -58,7 +58,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return profile
 
     def form_valid(self, form):
-        messages.success(self.request, "Notification preferences updated!")
+        messages.success(self.request, "Account settings updated!")
         return super().form_valid(form)
 
 
