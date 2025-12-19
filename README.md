@@ -8,7 +8,7 @@
 
 > A Django web application for organizing Secret Santa gift exchanges with privacy and ease
 
-![Secret Santa Homepage](.docs/assets/home.png)
+![Secret Santa Homepage](./docs/assets/home.png)
 
 ## Overview
 
