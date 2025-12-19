@@ -125,8 +125,9 @@ nav {
 }
 
 .btn-danger {
+    background: transparent;
     color: var(--deep-red);
-    border-color: var(--deep-red);
+    border: 1px solid var(--deep-red);
 }
 
 .btn-danger:hover {

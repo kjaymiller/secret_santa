@@ -45,9 +45,10 @@ bd sync               # Commit and push changes
 
 1. **Start**: Run `bd ready` to find actionable work
 2. **Claim**: Use `bd update <id> --status=in_progress`
-3. **Work**: Implement the task
-4. **Complete**: Use `bd close <id>`
-5. **Sync**: Always run `bd sync` at session end
+3. **Branch**: Create a new branch or worktree for the issue
+4. **Work**: Implement the task
+5. **Complete**: Use `bd close <id>`
+6. **Sync**: Always run `bd sync` at session end
 
 ### Key Concepts
 
@@ -73,6 +74,7 @@ git push                # Push to remote
 
 - Check `bd ready` at session start to find available work
 - Update status as you work (in_progress → closed)
+- Create a new branch or worktree when working on a new issue
 - Create new issues with `bd create` when you discover tasks
 - Use descriptive titles and set appropriate priority/type
 - Always `bd sync` before ending session
