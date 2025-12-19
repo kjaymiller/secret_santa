@@ -45,7 +45,7 @@ bd sync               # Commit and push changes
 
 1. **Start**: Run `bd ready` to find actionable work
 2. **Claim**: Use `bd update <id> --status=in_progress`
-3. **Branch**: Create a new branch or worktree for the issue
+3. **Branch**: Create a new branch or worktree for the issue. **NEVER COMMIT DIRECTLY TO MAIN.**
 4. **Work**: Implement the task
 5. **Complete**: Use `bd close <id>`
 6. **Sync**: Always run `bd sync` at session end
