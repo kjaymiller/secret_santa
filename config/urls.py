@@ -4,12 +4,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-from events.views import AccountView, AccountDeleteView, HomeView
+from events.views import AccountView, AccountDeleteView, HomeView, ResendConfirmationView
 
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("account/", AccountView.as_view(), name="account"),
+    path("account/resend-confirmation/", ResendConfirmationView.as_view(), name="account-resend-confirmation"),
     path("account/delete/", AccountDeleteView.as_view(), name="account-delete"),
     path(settings.ADMIN_URL, admin.site.urls),
     path("accounts/", include("allauth.urls")),

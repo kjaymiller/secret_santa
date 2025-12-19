@@ -35,7 +35,10 @@
                         {% if email.primary and not email.verified %}
                             <div class="banner-warning">
                                 <span>Your email address ({{ email.email }}) is not confirmed.</span>
-                                <a href="{% url 'account_email' %}">Resend confirmation link</a>
+                                <form method="post" action="{% url 'account-resend-confirmation' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background:none; border:none; padding:0; color:inherit; text-decoration:underline; font-weight:600; cursor:pointer; font-family:inherit; font-size:inherit;">Resend confirmation link</button>
+                                </form>
                             </div>
                         {% endif %}
                     {% endfor %}
