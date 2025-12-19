@@ -8,6 +8,8 @@
 
 > A Django web application for organizing Secret Santa gift exchanges with privacy and ease
 
+![Secret Santa Homepage](.docs/assets/home.png)
+
 ## Overview
 
 Secret Santa is a web application that helps groups organize gift exchanges where participants are randomly assigned a gift recipient while maintaining complete anonymity. The application handles participant management, random assignments with exclusion rules, and scheduled notifications.
