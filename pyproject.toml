@@ -18,10 +18,15 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "djade",
+    "djhtml",
     "django-test-plus",
     "model-bakery",
+    "pre-commit",
     "pytest",
+    "pytest-cov",
     "pytest-django",
+    "ruff",
 ]
 
 [tool.black]
