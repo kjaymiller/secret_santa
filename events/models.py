@@ -173,6 +173,7 @@ class UserProfile(models.Model):
     """User profile for storing additional preferences."""
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    phone_number = models.CharField(max_length=20, blank=True, null=True, help_text="Phone number for SMS notifications")
     notification_preference = models.CharField(
         max_length=10,
         choices=[("email", "Email"), ("sms", "SMS")],
