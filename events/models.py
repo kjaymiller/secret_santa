@@ -169,6 +169,22 @@ class Assignment(models.Model):
             self.save(update_fields=["is_viewed", "viewed_at"])
 
 
+
+class UserProfile(models.Model):
+    """User profile for storing additional preferences."""
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    notification_preference = models.CharField(
+        max_length=10,
+        choices=[("email", "Email"), ("sms", "SMS")],
+        default="email",
+        help_text="Preferred method for receiving notifications",
+    )
+
+    def __str__(self):
+        return f"Profile for {self.user}"
+
+
 class NotificationSchedule(models.Model):
     """Scheduled notification for an event."""
 

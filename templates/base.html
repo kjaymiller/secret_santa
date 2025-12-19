@@ -18,6 +18,7 @@
                             <li><a href="{% url 'events:event-list' %}">My Events</a></li>
                             <li><a href="{% url 'events:event-create' %}">Create Event</a></li>
                             <li><a href="{% url 'events:invite-code-entry' %}">Join Event</a></li>
+                            <li><a href="{% url 'account' %}">Account</a></li>
                             <li><a href="{% url 'account_logout' %}">Logout</a></li>
                         {% else %}
                             <li><a href="{% url 'events:invite-code-entry' %}">Join Event</a></li>

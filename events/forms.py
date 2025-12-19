@@ -2,7 +2,21 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from .models import Event, ExclusionGroup, NotificationSchedule, Participant
+from .models import Event, ExclusionGroup, NotificationSchedule, Participant, UserProfile
+
+
+class UserProfileForm(forms.ModelForm):
+    """Form for updating user profile preferences."""
+
+    class Meta:
+        model = UserProfile
+        fields = ["notification_preference"]
+        widgets = {
+            "notification_preference": forms.Select(attrs={"class": "form-select"}),
+        }
+        labels = {
+            "notification_preference": "Default Notification Method",
+        }
 
 
 class InviteCodeForm(forms.Form):

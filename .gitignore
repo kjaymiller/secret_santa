@@ -141,3 +141,6 @@ cython_debug/
 # Custom compose options
 compose.override.yml
 .env*
+
+# bv (beads viewer) local config and caches
+.bv/
