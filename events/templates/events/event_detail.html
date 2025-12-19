@@ -3,181 +3,181 @@
 {% block title %}{{ event.name }} - Secret Santa{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
-        <div>
-            <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
-                {{ event.name }}
-            </h1>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="padding: 4px 12px; background: {% if event.is_active %}var(--pine){% else %}var(--soft-gray){% endif %}; color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                    {% if event.is_active %}Active{% else %}Inactive{% endif %}
-                </span>
-                {% if event.assignments_revealed_at %}
-                    <span style="padding: 4px 12px; background: var(--gold); color: white; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                        Assignments Generated
+    <div class="mb-10">
+        <div class="flex justify-between items-start mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-forest mb-2">
+                    {{ event.name }}
+                </h1>
+                <div class="flex gap-3 items-center">
+                    <span class="badge {% if event.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                        {% if event.is_active %}Active{% else %}Inactive{% endif %}
                     </span>
-                {% endif %}
+                    {% if event.assignments_revealed_at %}
+                        <span class="badge badge-gold">
+                            Assignments Generated
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'events:event-update' event.pk %}" class="btn btn-secondary">Edit Event</a>
+                <a href="{% url 'events:event-delete' event.pk %}" class="btn btn-secondary btn-danger">Delete</a>
             </div>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <a href="{% url 'events:event-update' event.pk %}" class="btn btn-secondary">Edit Event</a>
-            <a href="{% url 'events:event-delete' event.pk %}" class="btn btn-secondary" style="color: var(--deep-red); border-color: var(--deep-red);">Delete</a>
-        </div>
-    </div>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;">
-        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">Event Details</h2>
+        <div class="grid-cols-2 mb-8">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-charcoal mb-4">Event Details</h2>
 
-            {% if event.description %}
-                <div style="margin-bottom: 20px;">
-                    <strong style="color: var(--soft-gray); font-size: 14px;">Description:</strong>
-                    <p style="color: var(--charcoal); margin-top: 4px;">{{ event.description }}</p>
-                </div>
-            {% endif %}
-
-            <div style="display: grid; gap: 12px;">
-                <div>
-                    <strong style="color: var(--soft-gray); font-size: 14px;">Exchange Date:</strong>
-                    <p style="color: var(--charcoal);">{{ event.exchange_date|date:"l, F d, Y" }}</p>
-                </div>
-
-                {% if event.budget_limit %}
-                    <div>
-                        <strong style="color: var(--soft-gray); font-size: 14px;">Budget Limit:</strong>
-                        <p style="color: var(--charcoal);">${{ event.budget_limit }}</p>
+                {% if event.description %}
+                    <div class="mb-5">
+                        <strong class="text-gray text-sm">Description:</strong>
+                        <p class="text-charcoal mt-1">{{ event.description }}</p>
                     </div>
                 {% endif %}
 
-                <div>
-                    <strong style="color: var(--soft-gray); font-size: 14px;">Created:</strong>
-                    <p style="color: var(--charcoal);">{{ event.created_at|date:"M d, Y" }}</p>
+                <div class="grid gap-3">
+                    <div>
+                        <strong class="text-gray text-sm">Exchange Date:</strong>
+                        <p class="text-charcoal">{{ event.exchange_date|date:"l, F d, Y" }}</p>
+                    </div>
+
+                    {% if event.budget_limit %}
+                        <div>
+                            <strong class="text-gray text-sm">Budget Limit:</strong>
+                            <p class="text-charcoal">${{ event.budget_limit }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <strong class="text-gray text-sm">Created:</strong>
+                        <p class="text-charcoal">{{ event.created_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="text-xl font-semibold text-charcoal mb-4">Invite Link</h2>
+
+                <p class="text-gray text-sm mb-3">
+                    Share this code or link with participants:
+                </p>
+
+                <div class="invite-code-box">
+                    <strong class="block text-xs text-gray mb-1">
+                        Invite Code:
+                    </strong>
+                    <code class="invite-code">
+                        {{ event.invite_code }}
+                    </code>
+                </div>
+
+                <div class="bg-cream p-3 rounded break-all">
+                    <a href="{% url 'events:join-event' event.invite_code %}" class="text-forest text-sm">
+                        {{ request.scheme }}://{{ request.get_host }}{% url 'events:join-event' event.invite_code %}
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">Invite Link</h2>
-
-            <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 12px;">
-                Share this code or link with participants:
-            </p>
-
-            <div style="background: var(--cream); padding: 16px; border-radius: 6px; margin-bottom: 12px;">
-                <strong style="display: block; font-size: 12px; color: var(--soft-gray); margin-bottom: 4px;">
-                    Invite Code:
-                </strong>
-                <code style="font-size: 20px; font-family: monospace; color: var(--forest-green); letter-spacing: 2px;">
-                    {{ event.invite_code }}
-                </code>
+        <div class="card mb-5">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-semibold text-charcoal">
+                    Participants ({{ participants.count }})
+                </h2>
             </div>
 
-            <div style="background: var(--cream); padding: 12px; border-radius: 6px; word-break: break-all;">
-                <a href="{% url 'events:join-event' event.invite_code %}" style="color: var(--forest-green); font-size: 13px;">
-                    {{ request.scheme }}://{{ request.get_host }}{% url 'events:join-event' event.invite_code %}
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal);">
-                Participants ({{ participants.count }})
-            </h2>
-        </div>
-
-        {% if participants %}
-            <div style="display: grid; gap: 12px;">
-                {% for participant in participants %}
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cream); border-radius: 6px;">
-                        <div>
+            {% if participants %}
+                <div class="grid gap-3">
+                    {% for participant in participants %}
+                        <div class="participant-row">
                             <div>
-                                <strong style="color: var(--charcoal);">{{ participant.name }}</strong>
-                                <span style="color: var(--soft-gray); font-size: 14px; margin-left: 8px;">
-                                    {{ participant.email }}
-                                </span>
-                                {% if participant.is_confirmed %}
-                                    <span style="margin-left: 8px; padding: 2px 8px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px;">
-                                        Confirmed
+                                <div>
+                                    <strong class="text-charcoal">{{ participant.name }}</strong>
+                                    <span class="text-gray text-sm ml-2">
+                                        {{ participant.email }}
                                     </span>
-                                {% else %}
-                                    <span style="margin-left: 8px; padding: 2px 8px; background: var(--soft-gray); color: white; border-radius: 12px; font-size: 11px;">
-                                        Pending
-                                    </span>
+                                    {% if participant.is_confirmed %}
+                                        <span class="badge badge-active ml-2 text-xs">
+                                            Confirmed
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-inactive ml-2 text-xs">
+                                            Pending
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                {% if participant.exclusions.exists %}
+                                    <div class="mt-1 text-gray text-xs">
+                                        <em>Excludes: {% for excluded in participant.exclusions.all|slice:":3" %}{{ excluded.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if participant.exclusions.count > 3 %} and {{ participant.exclusions.count|add:"-3" }} more{% endif %}</em>
+                                    </div>
                                 {% endif %}
                             </div>
-                            {% if participant.exclusions.exists %}
-                                <div style="margin-top: 4px; color: var(--soft-gray); font-size: 12px;">
-                                    <em>Excludes: {% for excluded in participant.exclusions.all|slice:":3" %}{{ excluded.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if participant.exclusions.count > 3 %} and {{ participant.exclusions.count|add:"-3" }} more{% endif %}</em>
-                                </div>
-                            {% endif %}
+                            <div class="flex gap-2">
+                                <a href="{% url 'events:participant-detail' participant.pk %}" class="btn btn-secondary text-sm py-1 px-3">
+                                    View
+                                </a>
+                                <a href="{% url 'events:participant-remove' participant.pk %}" class="btn btn-secondary btn-danger text-sm py-1 px-3">
+                                    Remove
+                                </a>
+                            </div>
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <a href="{% url 'events:participant-detail' participant.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;">
-                                View
-                            </a>
-                            <a href="{% url 'events:participant-remove' participant.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; color: var(--deep-red); border-color: var(--deep-red);">
-                                Remove
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p style="text-align: center; color: var(--soft-gray); padding: 30px;">
-                No participants yet. Share the invite code to get started!
-            </p>
-        {% endif %}
-    </div>
-
-    <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 16px;">
-            Assignments
-        </h2>
-
-        {% if event.assignments_revealed_at %}
-            <div style="margin-bottom: 16px;">
-                <p style="color: var(--pine); margin-bottom: 12px;">
-                    Assignments were generated on {{ event.assignments_revealed_at|date:"M d, Y \a\t g:i A" }}
-                </p>
-                <a href="{% url 'events:assignment-status' event.pk %}" class="btn">
-                    View Assignment Status
-                </a>
-            </div>
-        {% else %}
-            {% if can_generate_assignments %}
-                <p style="color: var(--soft-gray); margin-bottom: 16px;">
-                    You have {{ confirmed_participants.count }} confirmed participants. Ready to generate assignments!
-                </p>
-                <form method="post" action="{% url 'events:assignment-generate' event.pk %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn" onclick="return confirm('Are you sure? This cannot be undone!');">
-                        Generate Assignments
-                    </button>
-                </form>
+                    {% endfor %}
+                </div>
             {% else %}
-                <p style="color: var(--soft-gray);">
-                    You need at least 3 confirmed participants to generate assignments.
-                    Currently: {{ confirmed_participants.count }} confirmed.
+                <p class="text-center text-gray p-8">
+                    No participants yet. Share the invite code to get started!
                 </p>
             {% endif %}
-        {% endif %}
-    </div>
+        </div>
 
-    <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-        <a href="{% url 'events:notification-list' event.pk %}" class="btn btn-secondary">
-            Manage Notifications
-        </a>
-        {% if confirmed_participants.count > 0 %}
-            <a href="{% url 'events:exclusion-group-list' event.pk %}" class="btn btn-secondary">
-                Exclusion Groups
+        <div class="card">
+            <h2 class="text-xl font-semibold text-charcoal mb-4">
+                Assignments
+            </h2>
+
+            {% if event.assignments_revealed_at %}
+                <div class="mb-4">
+                    <p class="text-forest mb-3">
+                        Assignments were generated on {{ event.assignments_revealed_at|date:"M d, Y \a\t g:i A" }}
+                    </p>
+                    <a href="{% url 'events:assignment-status' event.pk %}" class="btn">
+                        View Assignment Status
+                    </a>
+                </div>
+            {% else %}
+                {% if can_generate_assignments %}
+                    <p class="text-gray mb-4">
+                        You have {{ confirmed_participants.count }} confirmed participants. Ready to generate assignments!
+                    </p>
+                    <form method="post" action="{% url 'events:assignment-generate' event.pk %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn" onclick="return confirm('Are you sure? This cannot be undone!');">
+                            Generate Assignments
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-gray">
+                        You need at least 3 confirmed participants to generate assignments.
+                        Currently: {{ confirmed_participants.count }} confirmed.
+                    </p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="mt-5 flex gap-3 flex-wrap">
+            <a href="{% url 'events:notification-list' event.pk %}" class="btn btn-secondary">
+                Manage Notifications
             </a>
-            <a href="{% url 'events:exclusion-manage' event.pk %}" class="btn btn-secondary">
-                Individual Exclusions
-            </a>
-        {% endif %}
+            {% if confirmed_participants.count > 0 %}
+                <a href="{% url 'events:exclusion-group-list' event.pk %}" class="btn btn-secondary">
+                    Exclusion Groups
+                </a>
+                <a href="{% url 'events:exclusion-manage' event.pk %}" class="btn btn-secondary">
+                    Individual Exclusions
+                </a>
+            {% endif %}
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}
