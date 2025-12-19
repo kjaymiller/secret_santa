@@ -125,8 +125,9 @@ nav {
 }
 
 .btn-danger {
+    background: transparent;
     color: var(--deep-red);
-    border-color: var(--deep-red);
+    border: 1px solid var(--deep-red);
 }
 
 .btn-danger:hover {
@@ -141,15 +142,104 @@ main {
     box-shadow: none;
 }
 
-.messages {
+.banner-warning {
+    background: #fff8e1;
+    border: 1px solid var(--gold);
+    color: #8a6d3b;
+    padding: 12px 20px;
+    border-radius: 8px;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.banner-warning a {
+    color: #8a6d3b;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.banner-warning a:hover {
+    color: var(--charcoal);
+}
+
+.messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    width: 350px;
+    max-width: 90vw;
 }
 
 .message {
-    padding: 16px 20px;
+    pointer-events: auto;
+    padding: 16px 40px 16px 20px;
     border-radius: 8px;
-    margin-bottom: 12px;
     border-left: 4px solid;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: white;
+    opacity: 0;
+    animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.message.sliding-out {
+    animation: slideOut 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+.message-content {
+    display: block;
+    font-weight: 500;
+}
+
+.message-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.5;
+    padding: 4px;
+    border-radius: 4px;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.message-close:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .message.success {
