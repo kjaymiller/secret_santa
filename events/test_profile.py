@@ -35,11 +35,24 @@ def test_account_view_post(client):
     client.force_login(user)
 
     url = reverse("account")
-    data = {"notification_preference": "sms"}
+    data = {"email": "test@example.com", "notification_preference": "sms", "phone_number": "+1234567890"}
     response = client.post(url, data)
 
     # Should redirect on success
     assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_account_view_post_validation_error(client):
+    user = User.objects.create_user(username="testuser", email="test@example.com", password="password")
+    client.force_login(user)
+
+    url = reverse("account")
+    data = {"email": "test@example.com", "notification_preference": "sms", "phone_number": ""}
+    response = client.post(url, data)
+
+    assert response.status_code == 200
+    assert "Phone number is required for SMS notifications" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -81,3 +94,23 @@ def test_resend_confirmation_view_no_email(client):
     messages = list(response.context["messages"])
     assert len(messages) == 1
     assert "No unverified primary email found" in str(messages[0])
+
+
+@pytest.mark.django_db
+def test_account_update_email_and_phone(client):
+    user = User.objects.create_user(username="testuser", email="old@example.com", password="password")
+    client.force_login(user)
+
+    url = reverse("account")
+    data = {
+        "email": "new@example.com",
+        "phone_number": "+15550009999",
+        "notification_preference": "email"
+    }
+    response = client.post(url, data)
+
+    assert response.status_code == 302
+    
+    user.refresh_from_db()
+    assert user.email == "new@example.com"
+    assert user.profile.phone_number == "+15550009999"

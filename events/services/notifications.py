@@ -38,6 +38,24 @@ class NotificationService:
         self.twilio_auth_token = settings.TWILIO_AUTH_TOKEN
         self.twilio_phone_number = settings.TWILIO_PHONE_NUMBER
 
+    def _can_send_email(self, participant) -> bool:
+        """Check if email notification should be sent based on user preference."""
+        if not participant.email:
+            return False
+        if participant.user and hasattr(participant.user, "profile"):
+            return participant.user.profile.notification_preference in ["email", "both"]
+        return True
+
+    def _can_send_sms(self, participant) -> bool:
+        """Check if SMS notification should be sent based on user preference."""
+        if not participant.phone_number:
+            return False
+        if participant.user and hasattr(participant.user, "profile"):
+            return participant.user.profile.notification_preference in ["sms", "both"]
+        # For guests (no user account), only send SMS if we have a number
+        # We assume if they provided a number, they accept SMS
+        return True
+
     def send_email_notification(
         self,
         to_email: str,
@@ -192,13 +210,13 @@ class NotificationService:
 
         try:
             # Get participants for this event
-            participants = event.participants.filter(is_confirmed=True)
+            participants = event.participants.filter(is_confirmed=True).select_related("user__profile")
 
             for participant in participants:
                 context["participant_name"] = participant.name
 
                 # Send email if required
-                if delivery_method in ["email", "both"] and participant.email:
+                if delivery_method in ["email", "both"] and self._can_send_email(participant):
                     try:
                         self.send_email_notification(
                             to_email=participant.email,
@@ -212,7 +230,7 @@ class NotificationService:
                         # Continue with other participants even if one fails
 
                 # Send SMS if required
-                if delivery_method in ["sms", "both"] and participant.phone_number:
+                if delivery_method in ["sms", "both"] and self._can_send_sms(participant):
                     try:
                         sms_message = self._get_sms_message(notification_type, context)
                         self.send_sms_notification(
@@ -297,7 +315,7 @@ class NotificationService:
         success = True
 
         # Send email
-        if giver.email:
+        if self._can_send_email(giver):
             try:
                 self.send_email_notification(
                     to_email=giver.email,
@@ -311,7 +329,7 @@ class NotificationService:
                 success = False
 
         # Send SMS if phone number is provided
-        if giver.phone_number:
+        if self._can_send_sms(giver):
             try:
                 sms_message = f"Your Secret Santa assignment for {event.name} is ready! You're giving a gift to {receiver.name}. Check your email for their wishlist."
                 self.send_sms_notification(
@@ -351,7 +369,7 @@ class NotificationService:
         success = True
 
         # Send email
-        if participant.email:
+        if self._can_send_email(participant):
             try:
                 self.send_email_notification(
                     to_email=participant.email,
@@ -365,7 +383,7 @@ class NotificationService:
                 success = False
 
         # Send SMS if phone number is provided
-        if participant.phone_number:
+        if self._can_send_sms(participant):
             try:
                 sms_message = f"You're invited to {event.name}! Join using code: {event.invite_code}"
                 self.send_sms_notification(

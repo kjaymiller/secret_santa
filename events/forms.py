@@ -8,15 +8,48 @@ from .models import Event, ExclusionGroup, NotificationSchedule, Participant, Us
 class UserProfileForm(forms.ModelForm):
     """Form for updating user profile preferences."""
 
+    email = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={"class": "form-control"}),
+        help_text="We'll send notifications to this address.",
+    )
+
     class Meta:
         model = UserProfile
-        fields = ["notification_preference"]
+        fields = ["email", "phone_number", "notification_preference"]
         widgets = {
+            "phone_number": forms.TextInput(attrs={"class": "form-control", "placeholder": "+1234567890"}),
             "notification_preference": forms.Select(attrs={"class": "form-select"}),
         }
         labels = {
             "notification_preference": "Default Notification Method",
+            "phone_number": "Phone Number",
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.user:
+            self.fields["email"].initial = self.instance.user.email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get("phone_number")
+        notification_preference = cleaned_data.get("notification_preference")
+
+        if notification_preference in ["sms", "both"] and not phone_number:
+            self.add_error("phone_number", "Phone number is required for SMS notifications.")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        email = self.cleaned_data.get("email")
+        if email and profile.user.email != email:
+            profile.user.email = email
+            profile.user.save()
+        if commit:
+            profile.save()
+        return profile
 
 
 class InviteCodeForm(forms.Form):
