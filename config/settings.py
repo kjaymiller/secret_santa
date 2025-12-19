@@ -149,12 +149,26 @@ MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    email = env.dj_email_url("EMAIL_URL", default="smtp://maildev")
-    EMAIL_HOST = email["EMAIL_HOST"]
-    EMAIL_HOST_PASSWORD = email["EMAIL_HOST_PASSWORD"]
-    EMAIL_HOST_USER = email["EMAIL_HOST_USER"]
-    EMAIL_PORT = email["EMAIL_PORT"]
-    EMAIL_USE_TLS = email["EMAIL_USE_TLS"]
+    if env.str("EMAIL_URL", default=""):
+        email = env.dj_email_url("EMAIL_URL")
+        EMAIL_HOST = email["EMAIL_HOST"]
+        EMAIL_HOST_PASSWORD = email["EMAIL_HOST_PASSWORD"]
+        EMAIL_HOST_USER = email["EMAIL_HOST_USER"]
+        EMAIL_PORT = email["EMAIL_PORT"]
+        EMAIL_USE_TLS = email["EMAIL_USE_TLS"]
+    elif env.str("SENDGRID_API_KEY", default=""):
+        EMAIL_HOST = "smtp.sendgrid.net"
+        EMAIL_PORT = 587
+        EMAIL_USE_TLS = True
+        EMAIL_HOST_USER = "apikey"
+        EMAIL_HOST_PASSWORD = env.str("SENDGRID_API_KEY")
+    else:
+        email = env.dj_email_url("EMAIL_URL", default="smtp://maildev")
+        EMAIL_HOST = email["EMAIL_HOST"]
+        EMAIL_HOST_PASSWORD = email["EMAIL_HOST_PASSWORD"]
+        EMAIL_HOST_USER = email["EMAIL_HOST_USER"]
+        EMAIL_PORT = email["EMAIL_PORT"]
+        EMAIL_USE_TLS = email["EMAIL_USE_TLS"]
 
 # Twilio SendGrid Configuration
 SENDGRID_API_KEY = env.str("SENDGRID_API_KEY", default="")
