@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}Styleguide - Secret Santa{% endblock %}
+
+{% block content %}
+<div class="mb-10">
+    <div class="mb-8 border-b pb-4">
+        <h1 class="text-3xl font-bold text-forest mb-2">Design System & Styleguide</h1>
+        <p class="text-gray text-lg">A reference for the Secret Santa visual language, components, and utilities.</p>
+    </div>
+
+    <!-- Navigation Table of Contents -->
+    <div class="card mb-10">
+        <h2 class="text-xl font-semibold text-charcoal mb-4">Contents</h2>
+        <div class="flex gap-4 flex-wrap">
+            <a href="#colors" class="btn btn-secondary text-sm">Colors</a>
+            <a href="#typography" class="btn btn-secondary text-sm">Typography</a>
+            <a href="#buttons" class="btn btn-secondary text-sm">Buttons</a>
+            <a href="#components" class="btn btn-secondary text-sm">Components</a>
+            <a href="#forms" class="btn btn-secondary text-sm">Forms</a>
+        </div>
+    </div>
+
+    <!-- Colors Section -->
+    <section id="colors" class="mb-12">
+        <h2 class="text-2xl font-semibold text-charcoal mb-6 pb-2 border-b">Colors</h2>
+        
+        <h3 class="text-lg font-medium text-charcoal mb-4">Brand Colors</h3>
+        <div class="grid-cols-2 gap-4 mb-8" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+            <!-- Forest Green -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--forest-green); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Forest Green</div>
+                <div class="text-xs text-gray font-mono">--forest-green</div>
+                <div class="text-xs text-gray">#1e5128</div>
+            </div>
+            <!-- Pine -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--pine); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Pine</div>
+                <div class="text-xs text-gray font-mono">--pine</div>
+                <div class="text-xs text-gray">#2d6a4f</div>
+            </div>
+            <!-- Sage -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--sage); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Sage</div>
+                <div class="text-xs text-gray font-mono">--sage</div>
+                <div class="text-xs text-gray">#52796f</div>
+            </div>
+            <!-- Gold -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--gold); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Gold</div>
+                <div class="text-xs text-gray font-mono">--gold</div>
+                <div class="text-xs text-gray">#d4a574</div>
+            </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-charcoal mb-4">Neutrals</h3>
+        <div class="grid-cols-2 gap-4 mb-8" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+            <!-- Charcoal -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--charcoal); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Charcoal</div>
+                <div class="text-xs text-gray font-mono">--charcoal</div>
+                <div class="text-xs text-gray">#2c2c2c</div>
+            </div>
+            <!-- Soft Gray -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--soft-gray); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Soft Gray</div>
+                <div class="text-xs text-gray font-mono">--soft-gray</div>
+                <div class="text-xs text-gray">#5a5a5a</div>
+            </div>
+            <!-- Cream -->
+            <div>
+                <div class="rounded mb-2 shadow-sm border" style="background-color: var(--cream); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Cream</div>
+                <div class="text-xs text-gray font-mono">--cream</div>
+                <div class="text-xs text-gray">#fef9f3</div>
+            </div>
+            <!-- Warm White -->
+            <div>
+                <div class="rounded mb-2 shadow-sm border" style="background-color: var(--warm-white); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Warm White</div>
+                <div class="text-xs text-gray font-mono">--warm-white</div>
+                <div class="text-xs text-gray">#fdfcfa</div>
+            </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-charcoal mb-4">Status / Semantic</h3>
+        <div class="grid-cols-2 gap-4" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+            <!-- Deep Red (Error) -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--deep-red); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Deep Red</div>
+                <div class="text-xs text-gray font-mono">--deep-red</div>
+                <div class="text-xs text-gray">#8b3a3a</div>
+            </div>
+            <!-- Cranberry -->
+            <div>
+                <div class="rounded mb-2 shadow-sm" style="background-color: var(--cranberry); height: 100px;"></div>
+                <div class="text-sm font-bold text-charcoal">Cranberry</div>
+                <div class="text-xs text-gray font-mono">--cranberry</div>
+                <div class="text-xs text-gray">#a44a4a</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section id="typography" class="mb-12">
+        <h2 class="text-2xl font-semibold text-charcoal mb-6 pb-2 border-b">Typography</h2>
+        
+        <div class="card mb-6">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-forest mb-2">Heading 1 (32px / Bold)</h1>
+                <code class="text-xs text-gray block mb-4">.text-3xl .font-bold .text-forest</code>
+                
+                <h2 class="text-2xl font-semibold text-charcoal mb-2">Heading 2 (24px / Semibold)</h2>
+                <code class="text-xs text-gray block mb-4">.text-2xl .font-semibold .text-charcoal</code>
+                
+                <h3 class="text-xl font-medium text-charcoal mb-2">Heading 3 (20px / Medium)</h3>
+                <code class="text-xs text-gray block mb-4">.text-xl .font-medium .text-charcoal</code>
+                
+                <h4 class="text-lg font-medium text-charcoal mb-2">Heading 4 (18px / Medium)</h4>
+                <code class="text-xs text-gray block mb-4">.text-lg .font-medium .text-charcoal</code>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-charcoal mb-2">
+                    <strong>Body Text:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. 
+                    Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.
+                </p>
+                <code class="text-xs text-gray block mb-4">Default body text</code>
+
+                <p class="text-sm text-gray mb-2">
+                    <strong>Small Text:</strong> Useful for metadata, hints, or secondary information.
+                </p>
+                <code class="text-xs text-gray block mb-4">.text-sm .text-gray</code>
+
+                <p class="text-xs text-gray mb-2">
+                    <strong>Extra Small Text:</strong> For very fine print or badges.
+                </p>
+                <code class="text-xs text-gray block mb-4">.text-xs .text-gray</code>
+            </div>
+
+            <div>
+                <p>
+                    <a href="#">This is a standard link</a> inside a paragraph. It should underline on hover.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buttons Section -->
+    <section id="buttons" class="mb-12">
+        <h2 class="text-2xl font-semibold text-charcoal mb-6 pb-2 border-b">Buttons</h2>
+        
+        <div class="card">
+            <div class="flex gap-4 items-end flex-wrap mb-8">
+                <div class="text-center">
+                    <button class="btn mb-2">Primary Button</button>
+                    <div class="text-xs text-gray">.btn</div>
+                </div>
+                
+                <div class="text-center">
+                    <button class="btn btn-secondary mb-2">Secondary Button</button>
+                    <div class="text-xs text-gray">.btn .btn-secondary</div>
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-secondary btn-danger mb-2">Danger Button</button>
+                    <div class="text-xs text-gray">.btn .btn-secondary .btn-danger</div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-forest rounded text-center">
+                <p class="text-white mb-4 text-sm">Buttons on dark background</p>
+                <button class="btn bg-white text-forest mb-2">Inverse Action</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Components Section -->
+    <section id="components" class="mb-12">
+        <h2 class="text-2xl font-semibold text-charcoal mb-6 pb-2 border-b">Components</h2>
+
+        <!-- Cards -->
+        <h3 class="text-lg font-medium text-charcoal mb-4">Cards</h3>
+        <div class="grid-cols-2 gap-4 mb-8">
+            <div class="card">
+                <h4 class="text-lg font-semibold mb-2">Standard Card</h4>
+                <p class="text-gray mb-4">Basic container for content with padding and shadow.</p>
+                <code class="text-xs block bg-cream p-2 rounded">.card</code>
+            </div>
+            
+            <div class="event-card">
+                <h4 class="text-lg font-semibold mb-2 text-forest">Event Card</h4>
+                <p class="text-gray mb-4">Specialized card with accent border for event lists.</p>
+                <code class="text-xs block bg-cream p-2 rounded">.event-card</code>
+            </div>
+        </div>
+
+        <!-- Badges -->
+        <h3 class="text-lg font-medium text-charcoal mb-4">Badges</h3>
+        <div class="card mb-8">
+            <div class="flex gap-4 items-center mb-4">
+                <span class="badge badge-active">Active</span>
+                <code class="text-xs text-gray">.badge .badge-active</code>
+            </div>
+            <div class="flex gap-4 items-center mb-4">
+                <span class="badge badge-inactive">Inactive</span>
+                <code class="text-xs text-gray">.badge .badge-inactive</code>
+            </div>
+            <div class="flex gap-4 items-center">
+                <span class="badge badge-gold">Special</span>
+                <code class="text-xs text-gray">.badge .badge-gold</code>
+            </div>
+        </div>
+
+        <!-- Messages/Alerts -->
+        <h3 class="text-lg font-medium text-charcoal mb-4">Messages / Alerts</h3>
+        <div class="mb-8">
+            <div class="message success">
+                <strong>Success!</strong> This is a success message.
+            </div>
+            <div class="message error">
+                <strong>Error!</strong> Something went wrong.
+            </div>
+            <div class="message info">
+                <strong>Info:</strong> This is an informational message.
+            </div>
+        </div>
+        
+        <!-- Invite Code -->
+        <h3 class="text-lg font-medium text-charcoal mb-4">Invite Codes</h3>
+        <div class="card mb-8">
+            <div class="invite-code-box mb-4">
+                <strong class="block text-xs text-gray mb-1">Large Display:</strong>
+                <code class="invite-code">SANTA-2025</code>
+            </div>
+            
+            <div>
+                <strong class="text-sm text-gray mr-2">Inline Display:</strong>
+                <code class="invite-code-sm">SANTA-2025</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- Forms Section -->
+    <section id="forms" class="mb-12">
+        <h2 class="text-2xl font-semibold text-charcoal mb-6 pb-2 border-b">Forms</h2>
+        
+        <div class="card max-w-lg">
+            <form onsubmit="return false;">
+                <div class="mb-4">
+                    <label class="block font-medium text-charcoal mb-2">Text Input <span class="text-red">*</span></label>
+                    <input type="text" class="w-full p-3 border border-gray-300 rounded focus:border-forest outline-none" placeholder="e.g. John Doe">
+                    <p class="text-xs text-gray mt-1">Helper text goes here.</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block font-medium text-charcoal mb-2">Select Dropdown</label>
+                    <select class="w-full p-3 border border-gray-300 rounded bg-white">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block font-medium text-charcoal mb-2">Error State</label>
+                    <input type="text" class="w-full p-3 border border-red-500 rounded outline-none" value="Invalid Value">
+                    <p class="text-xs text-red mt-1">This field is required.</p>
+                </div>
+
+                <div class="flex items-center gap-2 mb-6">
+                    <input type="checkbox" id="check1" class="w-4 h-4 text-forest rounded">
+                    <label for="check1" class="text-charcoal">I agree to the terms</label>
+                </div>
+
+                <button class="btn">Submit Form</button>
+            </form>
+        </div>
+    </section>
+
+</div>
+
+<style>
+    /* Inline styles for styleguide specifics only */
+    .w-full { width: 100%; }
+    .border-b { border-bottom: 1px solid #e5e7eb; }
+    .pb-2 { padding-bottom: 0.5rem; }
+    .pb-4 { padding-bottom: 1rem; }
+    .max-w-lg { max-width: 32rem; }
+    .border-gray-300 { border-color: #d1d5db; }
+    .border-red-500 { border-color: var(--deep-red); }
+</style>
+{% endblock %}
