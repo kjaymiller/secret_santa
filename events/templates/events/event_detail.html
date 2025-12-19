@@ -82,25 +82,25 @@
                 </div>
 
                 {% if invite_form %}
-                <div class="card">
-                    <h2 class="text-xl font-semibold text-charcoal mb-4">Send Invites</h2>
-                    <p class="text-gray text-sm mb-3">
-                        Enter email addresses to send invites directly.
-                    </p>
-                    <form method="post" action="{% url 'events:event-send-invites' event.pk %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            {{ invite_form.emails }}
-                            {% if invite_form.emails.help_text %}
-                                <p class="text-xs text-gray mt-1">{{ invite_form.emails.help_text }}</p>
-                            {% endif %}
-                            {% for error in invite_form.emails.errors %}
-                                <p class="text-xs text-red mt-1">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                        <button type="submit" class="btn w-full">Send Invites</button>
-                    </form>
-                </div>
+                    <div class="card">
+                        <h2 class="text-xl font-semibold text-charcoal mb-4">Send Invites</h2>
+                        <p class="text-gray text-sm mb-3">
+                            Enter email addresses to send invites directly.
+                        </p>
+                        <form method="post" action="{% url 'events:event-send-invites' event.pk %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ invite_form.emails }}
+                                {% if invite_form.emails.help_text %}
+                                    <p class="text-xs text-gray mt-1">{{ invite_form.emails.help_text }}</p>
+                                {% endif %}
+                                {% for error in invite_form.emails.errors %}
+                                    <p class="text-xs text-red mt-1">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="btn w-full">Send Invites</button>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
         </div>

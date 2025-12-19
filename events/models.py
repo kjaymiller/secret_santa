@@ -169,7 +169,6 @@ class Assignment(models.Model):
             self.save(update_fields=["is_viewed", "viewed_at"])
 
 
-
 class UserProfile(models.Model):
     """User profile for storing additional preferences."""
 

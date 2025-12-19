@@ -260,9 +260,7 @@ class NotificationService:
             event_date = context.get("event_date", "upcoming date")
             message = f"Reminder: {event_name} is on {event_date}. Happy gifting!"
         elif notification_type == "custom":
-            message = context.get(
-                "custom_message", f"Update from {event_name}. Check your email for details."
-            )
+            message = context.get("custom_message", f"Update from {event_name}. Check your email for details.")
         else:
             message = f"Notification from {event_name}"
 

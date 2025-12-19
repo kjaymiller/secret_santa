@@ -76,9 +76,7 @@ class EventInviteForm(forms.Form):
                 invalid_emails.append(email)
 
         if invalid_emails:
-            raise ValidationError(
-                f"The following email addresses are invalid: {', '.join(invalid_emails)}"
-            )
+            raise ValidationError(f"The following email addresses are invalid: {', '.join(invalid_emails)}")
 
         if not valid_emails:
             raise ValidationError("Please enter at least one valid email address.")

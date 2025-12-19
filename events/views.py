@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
 from .forms import (
     EventForm,
@@ -36,7 +36,7 @@ class HomeView(View):
         }
         if request.user.is_authenticated:
             context["user_event_count"] = Event.objects.filter(organizer=request.user).count()
-        
+
         return render(request, "home.html", context)
 
 
@@ -155,8 +155,8 @@ class EventSendInvitesView(LoginRequiredMixin, View):
                     if not participant.is_confirmed:
                         try:
                             notification_service.send_invite_notification(participant, event)
-                            invited_count += 1 # Count as invited if we resent the invite
-                            existing_count -= 1 # Move from existing to invited bucket for feedback
+                            invited_count += 1  # Count as invited if we resent the invite
+                            existing_count -= 1  # Move from existing to invited bucket for feedback
                         except Exception:
                             pass
 
