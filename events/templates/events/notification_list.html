@@ -3,30 +3,30 @@
 {% block title %}Notifications - {{ event.name }}{% endblock %}
 
 {% block content %}
-    <div style="margin-bottom: 40px;">
-        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+    <div class="mb-10">
+        <div class="flex justify-between items-start mb-8">
             <div>
-                <h1 style="color: var(--forest-green); font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+                <h1 class="text-forest text-3xl font-bold mb-2">
                     Notification Schedules
                 </h1>
-                <p style="color: var(--soft-gray); font-size: 16px;">
+                <p class="text-gray text-base">
                     {{ event.name }}
                 </p>
             </div>
-            <div style="display: flex; gap: 8px;">
+            <div class="flex gap-2">
                 <a href="{% url 'events:notification-create' event.pk %}" class="btn">Schedule Notification</a>
                 <a href="{% url 'events:event-detail' event.pk %}" class="btn btn-secondary">Back to Event</a>
             </div>
         </div>
 
-        <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #1976d2; margin-bottom: 24px;">
-            <h3 style="font-size: 18px; font-weight: 600; color: #1565c0; margin-bottom: 12px;">
+        <div class="message info mb-6">
+            <h3 class="text-lg font-semibold text-blue mb-3">
                 About Notifications
             </h3>
-            <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 8px;">
+            <p class="text-gray text-sm mb-2">
                 Schedule automatic email or SMS notifications to remind participants about:
             </p>
-            <ul style="color: var(--soft-gray); font-size: 14px; margin-left: 20px;">
+            <ul class="text-gray text-sm ml-5">
                 <li>Viewing their Secret Santa assignments</li>
                 <li>Upcoming exchange dates</li>
                 <li>Important event updates</li>
@@ -34,54 +34,54 @@
         </div>
 
         {% if notifications %}
-            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <h2 style="font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px;">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-charcoal mb-5">
                     Scheduled Notifications ({{ notifications.count }})
                 </h2>
 
-                <div style="display: grid; gap: 16px;">
+                <div class="grid gap-4">
                     {% for notification in notifications %}
-                        <div style="padding: 20px; background: var(--cream); border-radius: 8px; {% if notification.is_sent %}opacity: 0.6;{% endif %}">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                                        <h3 style="font-size: 18px; font-weight: 600; color: var(--charcoal);">
+                        <div class="p-5 bg-cream rounded {% if notification.is_sent %}opacity-60{% endif %}">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h3 class="text-lg font-semibold text-charcoal">
                                             {{ notification.get_notification_type_display }}
                                         </h3>
 
                                         {% if notification.is_sent %}
-                                            <span style="padding: 4px 10px; background: var(--pine); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                            <span class="badge badge-active">
                                                 Sent
                                             </span>
                                         {% else %}
-                                            <span style="padding: 4px 10px; background: var(--gold); color: white; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                            <span class="badge badge-gold">
                                                 Scheduled
                                             </span>
                                         {% endif %}
 
-                                        <span style="padding: 4px 10px; background: white; border-radius: 12px; font-size: 11px; font-weight: 500; text-transform: uppercase;">
+                                        <span class="badge bg-white text-xs uppercase">
                                             {{ notification.delivery_method }}
                                         </span>
                                     </div>
 
                                     {% if notification.message %}
-                                        <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 12px;">
+                                        <p class="text-gray text-sm mb-3">
                                             {{ notification.message|truncatewords:20 }}
                                         </p>
                                     {% endif %}
 
-                                    <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px;">
+                                    <div class="flex gap-5 flex-wrap text-sm">
                                         <div>
-                                            <strong style="color: var(--soft-gray);">Scheduled For:</strong>
-                                            <span style="color: var(--charcoal);">
+                                            <strong class="text-gray">Scheduled For:</strong>
+                                            <span class="text-charcoal">
                                                 {{ notification.scheduled_time|date:"M d, Y \a\t g:i A" }}
                                             </span>
                                         </div>
 
                                         {% if notification.is_sent and notification.sent_at %}
                                             <div>
-                                                <strong style="color: var(--soft-gray);">Sent At:</strong>
-                                                <span style="color: var(--charcoal);">
+                                                <strong class="text-gray">Sent At:</strong>
+                                                <span class="text-charcoal">
                                                     {{ notification.sent_at|date:"M d, Y \a\t g:i A" }}
                                                 </span>
                                             </div>
@@ -90,11 +90,11 @@
                                 </div>
 
                                 {% if not notification.is_sent %}
-                                    <div style="display: flex; gap: 8px;">
-                                        <a href="{% url 'events:notification-update' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">
+                                    <div class="flex gap-2">
+                                        <a href="{% url 'events:notification-update' notification.pk %}" class="btn btn-secondary py-2 px-4 text-xs">
                                             Edit
                                         </a>
-                                        <a href="{% url 'events:notification-delete' notification.pk %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px; color: var(--deep-red); border-color: var(--deep-red);">
+                                        <a href="{% url 'events:notification-delete' notification.pk %}" class="btn btn-secondary py-2 px-4 text-xs btn-danger">
                                             Delete
                                         </a>
                                     </div>

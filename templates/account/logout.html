@@ -4,25 +4,25 @@
 {% block title %}Logout - Secret Santa{% endblock %}
 
 {% block content %}
-    <div style="max-width: 500px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+    <div class="max-w-lg mx-auto">
+        <div class="text-center mb-10">
+            <h1 class="text-forest text-4xl font-bold mb-3">
                 Sign Out
             </h1>
         </div>
 
-        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-align: center;">
-            <p style="color: var(--soft-gray); font-size: 16px; margin-bottom: 30px;">
+        <div class="card p-10 text-center">
+            <p class="text-gray text-base mb-8">
                 Are you sure you want to sign out?
             </p>
 
             <form method="post" action="{% url 'account_logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn" style="padding: 14px 32px; font-size: 16px;">
+                <button type="submit" class="btn px-8 py-3 text-base">
                     Yes, Sign Out
                 </button>
-                <div style="margin-top: 16px;">
-                    <a href="{% url 'home' %}" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">
+                <div class="mt-4">
+                    <a href="{% url 'home' %}" class="btn btn-secondary px-8 py-3 text-base">
                         Cancel
                     </a>
                 </div>

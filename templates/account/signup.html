@@ -4,96 +4,78 @@
 {% block title %}Sign Up - Secret Santa{% endblock %}
 
 {% block content %}
-    <div style="max-width: 500px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+    <div class="max-w-lg mx-auto">
+        <div class="text-center mb-10">
+            <h1 class="text-forest text-4xl font-bold mb-3">
                 Create Account
             </h1>
-            <p style="color: var(--soft-gray); font-size: 16px;">
+            <p class="text-gray text-base">
                 Start organizing your Secret Santa events
             </p>
         </div>
 
-        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <form method="post" action="{% url 'account_signup' %}">
+        <div class="card p-10">
+            <form class="auth-form" method="post" action="{% url 'account_signup' %}">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                    <div class="message error" style="margin-bottom: 20px;">
+                    <div class="message error mb-5">
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
 
-                <div style="display: grid; gap: 20px;">
+                <div class="grid gap-5">
                     <div>
-                        <label for="{{ form.email.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        <label for="{{ form.email.id_for_label }}" class="block font-medium text-charcoal mb-2">
                             Email Address
                         </label>
                         {{ form.email }}
                         {% if form.email.errors %}
-                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            <div class="text-red text-sm mt-1">
                                 {{ form.email.errors }}
                             </div>
                         {% endif %}
                     </div>
 
                     <div>
-                        <label for="{{ form.password1.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        <label for="{{ form.password1.id_for_label }}" class="block font-medium text-charcoal mb-2">
                             Password
                         </label>
                         {{ form.password1 }}
                         {% if form.password1.errors %}
-                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            <div class="text-red text-sm mt-1">
                                 {{ form.password1.errors }}
                             </div>
                         {% endif %}
                     </div>
 
                     <div>
-                        <label for="{{ form.password2.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;">
+                        <label for="{{ form.password2.id_for_label }}" class="block font-medium text-charcoal mb-2">
                             Confirm Password
                         </label>
                         {{ form.password2 }}
                         {% if form.password2.errors %}
-                            <div style="color: var(--deep-red); font-size: 14px; margin-top: 4px;">
+                            <div class="text-red text-sm mt-1">
                                 {{ form.password2.errors }}
                             </div>
                         {% endif %}
                     </div>
                 </div>
 
-                <div style="margin-top: 32px;">
-                    <button type="submit" class="btn" style="width: 100%; padding: 14px; font-size: 16px;">
+                <div class="mt-8">
+                    <button type="submit" class="btn w-full p-4 text-base">
                         Create Account
                     </button>
                 </div>
             </form>
         </div>
 
-        <div style="text-align: center; margin-top: 24px; color: var(--soft-gray); font-size: 14px;">
+        <div class="text-center mt-6 text-gray text-sm">
             Already have an account?
-            <a href="{% url 'account_login' %}" style="color: var(--forest-green); text-decoration: none; font-weight: 500;">
+            <a href="{% url 'account_login' %}" class="text-forest no-underline font-medium">
                 Sign in
             </a>
         </div>
     </div>
 
-    <style>
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: border-color 0.2s;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: var(--forest-green);
-        }
-    </style>
 {% endblock content %}
