@@ -30,6 +30,17 @@
             </header>
 
             <main>
+                {% if user.is_authenticated %}
+                    {% for email in user.emailaddress_set.all %}
+                        {% if email.primary and not email.verified %}
+                            <div class="banner-warning">
+                                <span>Your email address ({{ email.email }}) is not confirmed.</span>
+                                <a href="{% url 'account_email' %}">Resend confirmation link</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
                 {% if messages %}
                     <div class="messages">
                         {% for message in messages %}

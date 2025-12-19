@@ -141,6 +141,29 @@ main {
     box-shadow: none;
 }
 
+.banner-warning {
+    background: #fff8e1;
+    border: 1px solid var(--gold);
+    color: #8a6d3b;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.banner-warning a {
+    color: #8a6d3b;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.banner-warning a:hover {
+    color: var(--charcoal);
+}
+
 .messages {
     position: fixed;
     top: 20px;

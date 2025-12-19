@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const messages = document.querySelectorAll('.message');
-    
+
     messages.forEach(msg => {
         // Setup close button
         const closeBtn = msg.querySelector('.message-close');
@@ -19,13 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function dismissMessage(element) {
         if (element.classList.contains('sliding-out')) return;
-        
+
         element.classList.add('sliding-out');
-        
+
         // Listen for animation end to remove from DOM
         element.addEventListener('animationend', () => {
             element.remove();
-            
+
             // Check if messages container is empty and remove it if necessary
             // (Optional, but keeps DOM clean)
             const container = document.querySelector('.messages');
