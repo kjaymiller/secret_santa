@@ -41,25 +41,35 @@ Secret Santa is a web application that helps groups organize gift exchanges wher
 
 ### Installation
 
-```shell
 # Clone the repository
-$ git clone <repository-url>
+# You can also use the gh cli
+
+```shell
+$ git clone git@github.com:kjaymiller/secret_santa.git
 $ cd secret_santa
+```
 
 # Bootstrap the project (copies .env, locks dependencies, builds containers)
 $ just bootstrap
 
+# update the .env file (example at .env.example)
+
 # Run migrations
+```shell
 $ just manage migrate
+```
 
 # Create a superuser
+```shell
 $ just manage createsuperuser
+```
 
 # Start the development server
+```shell
 $ just up
 ```
 
-The application will be available at http://localhost:8000/
+The application will be available at _http://localhost:8000/_
 
 ## Usage
 
@@ -359,10 +369,13 @@ Available recipes:
     upgrade                   # Upgrade dependencies and lock
 ```
 
-## Documentation
+## AI Usage
 
-- **CLAUDE.md**: Development guidance and project overview for Claude Code
-- **MERISE_PLAN.md**: Complete project specification with data models, business rules, API structure, and development phases
+AI usage is okay, however:
+
+- the AI model must be included in the PR
+- There is an AGENTS.md file. Do not modify this file
+- Do not add any other files for models
 
 ## Contributing
 
@@ -375,7 +388,7 @@ Contributions are welcome! Please ensure:
 
 ## License
 
-See LICENSE file for details.
+See [LICENSE](./LICENSE) file for details.
 
 ## Built With
 
