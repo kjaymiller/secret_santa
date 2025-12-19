@@ -1,0 +1,40 @@
+{% extends "emails/base.html" %}
+
+{% block title %}You've been added to {{ group_name }} - {{ event_name }}{% endblock %}
+
+{% block content %}
+<div class="greeting">
+    Hi {{ participant_name }},
+</div>
+
+<p>The organizer of <strong>{{ event_name }}</strong> has added you to an exclusion group called <strong>"{{ group_name }}"</strong>.</p>
+
+<div class="info-box">
+    <p><strong>What does this mean?</strong></p>
+    <p>When Secret Santa assignments are generated, you will not be assigned to give gifts to anyone else in this group. This is commonly used for families, couples, or close friends who prefer to exchange gifts outside of the Secret Santa.</p>
+</div>
+
+<div class="info-box">
+    <p><strong>Group Details:</strong></p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li><strong>Group Name:</strong> {{ group_name }}</li>
+        {% if group_description %}
+        <li><strong>Description:</strong> {{ group_description }}</li>
+        {% endif %}
+        <li><strong>Number of Members:</strong> {{ member_count }}</li>
+        <li><strong>Event:</strong> {{ event_name }}</li>
+        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+    </ul>
+</div>
+
+<p><strong>Other members in this group:</strong></p>
+<ul style="margin: 10px 0; padding-left: 20px;">
+    {% for member in other_members %}
+    <li>{{ member.name }}</li>
+    {% endfor %}
+</ul>
+
+<p>If you have any questions about this exclusion group, please contact the event organizer, {{ organizer_name }}.</p>
+
+<p>Happy Secret Santa!</p>
+{% endblock %}

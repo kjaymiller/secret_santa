@@ -73,6 +73,8 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     template_name = "events/event_form.html"
 
     def form_valid(self, form):
+        from events.services.notifications import get_notification_service
+
         form.instance.organizer = self.request.user
         response = super().form_valid(form)
 
@@ -85,7 +87,20 @@ class EventCreateView(LoginRequiredMixin, CreateView):
             is_confirmed=True,
         )
 
-        messages.success(self.request, f"Event '{form.instance.name}' created successfully!")
+        # Send event creation confirmation email to organizer
+        notification_service = get_notification_service()
+        try:
+            notification_service.send_event_creation_notification(self.object, self.request)
+            messages.success(
+                self.request,
+                f"Event '{form.instance.name}' created successfully! Confirmation email sent with invite code.",
+            )
+        except Exception as e:
+            messages.warning(
+                self.request,
+                f"Event '{form.instance.name}' created successfully! (Email notification failed to send)",
+            )
+
         return response
 
     def get_success_url(self):
@@ -121,7 +136,28 @@ class EventDeleteView(LoginRequiredMixin, DeleteView):
         return Event.objects.filter(organizer=self.request.user)
 
     def form_valid(self, form):
-        messages.success(self.request, f"Event '{self.object.name}' deleted successfully!")
+        from events.services.notifications import get_notification_service
+
+        event_name = self.object.name
+        participant_count = self.object.participants.count()
+
+        # Send deletion notification emails to all participants before deleting
+        if participant_count > 0:
+            notification_service = get_notification_service()
+            try:
+                notification_service.send_event_deletion_notification(self.object)
+                messages.success(
+                    self.request,
+                    f"Event '{event_name}' deleted successfully! Cancellation emails sent to {participant_count} participant(s).",
+                )
+            except Exception as e:
+                messages.warning(
+                    self.request,
+                    f"Event '{event_name}' deleted, but some cancellation emails failed to send.",
+                )
+        else:
+            messages.success(self.request, f"Event '{event_name}' deleted successfully!")
+
         return super().form_valid(form)
 
 
@@ -161,6 +197,8 @@ class ParticipantJoinView(CreateView):
         return context
 
     def form_valid(self, form):
+        from events.services.notifications import get_notification_service
+
         invite_code = self.kwargs.get("invite_code")
         event = get_object_or_404(Event, invite_code=invite_code, is_active=True)
 
@@ -173,11 +211,30 @@ class ParticipantJoinView(CreateView):
         if self.request.user.is_authenticated:
             form.instance.user = self.request.user
 
-        messages.success(
-            self.request,
-            f"Successfully joined '{event.name}'! Please check your email to confirm your participation.",
+        response = super().form_valid(form)
+
+        # Generate confirmation token
+        self.object.generate_confirmation_token()
+
+        # Send confirmation email
+        confirmation_url = self.request.build_absolute_uri(
+            reverse("events:participant-confirm-email", kwargs={"token": self.object.confirmation_token})
         )
-        return super().form_valid(form)
+
+        notification_service = get_notification_service()
+        try:
+            notification_service.send_confirmation_email(self.object, confirmation_url)
+            messages.success(
+                self.request,
+                f"Successfully joined '{event.name}'! Please check your email to confirm your participation.",
+            )
+        except Exception as e:
+            messages.warning(
+                self.request,
+                f"You've been registered for '{event.name}', but we couldn't send the confirmation email. Please contact the organizer.",
+            )
+
+        return response
 
     def get_success_url(self):
         return reverse("events:participant-detail", kwargs={"pk": self.object.pk})
@@ -217,7 +274,7 @@ class ParticipantUpdateView(UpdateView):
 
 
 class ParticipantConfirmView(View):
-    """Confirm participation in an event."""
+    """Confirm participation in an event (legacy button-based confirmation)."""
 
     def post(self, request, pk):
         participant = get_object_or_404(Participant, pk=pk)
@@ -233,6 +290,25 @@ class ParticipantConfirmView(View):
             messages.error(request, "You don't have permission to confirm this participant.")
 
         return redirect("events:participant-detail", pk=pk)
+
+
+class ParticipantConfirmEmailView(View):
+    """Confirm participation via email token."""
+
+    def get(self, request, token):
+        participant = get_object_or_404(Participant, confirmation_token=token)
+
+        if participant.is_confirmed:
+            messages.info(request, "Your participation has already been confirmed!")
+        else:
+            participant.is_confirmed = True
+            participant.save(update_fields=["is_confirmed", "updated_at"])
+            messages.success(
+                request,
+                f"Thank you for confirming your participation in {participant.event.name}!",
+            )
+
+        return redirect("events:participant-detail", pk=participant.pk)
 
 
 class ParticipantRemoveView(LoginRequiredMixin, DeleteView):
@@ -352,6 +428,8 @@ class ExclusionGroupCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def form_valid(self, form):
+        from events.services.notifications import get_notification_service
+
         event_pk = self.kwargs.get("event_pk")
         form.instance.event = get_object_or_404(Event, pk=event_pk, organizer=self.request.user)
         response = super().form_valid(form)
@@ -359,7 +437,20 @@ class ExclusionGroupCreateView(LoginRequiredMixin, CreateView):
         # Apply exclusions between all members
         self.object.apply_exclusions()
 
-        messages.success(self.request, f"Exclusion group '{self.object.name}' created and exclusions applied!")
+        # Send notification emails to all group members
+        notification_service = get_notification_service()
+        try:
+            notification_service.send_exclusion_group_notification(self.object)
+            messages.success(
+                self.request,
+                f"Exclusion group '{self.object.name}' created and exclusions applied! Notification emails sent to all members.",
+            )
+        except Exception as e:
+            messages.warning(
+                self.request,
+                f"Exclusion group '{self.object.name}' created, but some notification emails failed to send.",
+            )
+
         return response
 
     def get_success_url(self):
@@ -388,6 +479,8 @@ class ExclusionGroupUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
+        from events.services.notifications import get_notification_service
+
         # Remove old exclusions first
         self.object.remove_exclusions()
 
@@ -396,7 +489,20 @@ class ExclusionGroupUpdateView(LoginRequiredMixin, UpdateView):
         # Apply new exclusions
         self.object.apply_exclusions()
 
-        messages.success(self.request, f"Exclusion group '{self.object.name}' updated and exclusions reapplied!")
+        # Send notification emails to all group members
+        notification_service = get_notification_service()
+        try:
+            notification_service.send_exclusion_group_notification(self.object)
+            messages.success(
+                self.request,
+                f"Exclusion group '{self.object.name}' updated and exclusions reapplied! Notification emails sent to all members.",
+            )
+        except Exception as e:
+            messages.warning(
+                self.request,
+                f"Exclusion group '{self.object.name}' updated, but some notification emails failed to send.",
+            )
+
         return response
 
     def get_success_url(self):

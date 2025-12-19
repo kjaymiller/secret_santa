@@ -11,6 +11,8 @@ dependencies = [
     "django-prodserver[gunicorn]",
     "environs[django]",
     "psycopg[binary]",
+    "sendgrid",
+    "twilio",
     "whitenoise",
 ]
 

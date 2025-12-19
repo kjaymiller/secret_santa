@@ -65,6 +65,7 @@ class Participant(models.Model):
         help_text="Participants this person cannot be assigned to give gifts to",
     )
     is_confirmed = models.BooleanField(default=False)
+    confirmation_token = models.CharField(max_length=64, unique=True, blank=True, null=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -76,6 +77,12 @@ class Participant(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.event.name})"
+
+    def generate_confirmation_token(self):
+        """Generate a unique confirmation token for email verification."""
+        if not self.confirmation_token:
+            self.confirmation_token = uuid.uuid4().hex
+            self.save(update_fields=["confirmation_token"])
 
 
 class ExclusionGroup(models.Model):
@@ -144,7 +151,7 @@ class Assignment(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["event", "giver"], name="unique_giver_per_event"),
             models.CheckConstraint(
-                check=~models.Q(giver=models.F("receiver")),
+                condition=~models.Q(giver=models.F("receiver")),
                 name="no_self_assignment",
             ),
         ]

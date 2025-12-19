@@ -1,0 +1,46 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Confirm your participation in {{ event_name }}{% endblock %}
+
+{% block content %}
+<div class="greeting">
+    Hi {{ participant_name }},
+</div>
+
+<p>Thank you for joining <strong>{{ event_name }}</strong>!</p>
+
+<p>To complete your registration and confirm your participation, please click the button below:</p>
+
+<div style="text-align: center;">
+    <a href="{{ confirmation_url }}" class="button">
+        Confirm My Participation
+    </a>
+</div>
+
+<div class="info-box">
+    <p><strong>Event Details:</strong></p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li><strong>Event Name:</strong> {{ event_name }}</li>
+        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+        {% if budget_max %}
+        <li><strong>Budget:</strong> ${{ budget_max }}</li>
+        {% endif %}
+        {% if registration_deadline %}
+        <li><strong>Registration Deadline:</strong> {{ registration_deadline|date:"F j, Y" }}</li>
+        {% endif %}
+        <li><strong>Organizer:</strong> {{ organizer_name }}</li>
+    </ul>
+</div>
+
+<p><strong>What happens after confirmation?</strong></p>
+<ul style="margin: 10px 0; padding-left: 20px;">
+    <li>You'll be able to add your gift wishlist</li>
+    <li>You'll be included when Secret Santa assignments are generated</li>
+    <li>You'll receive notifications about the event</li>
+</ul>
+
+<p>If you can't click the button above, copy and paste this link into your browser:</p>
+<p style="word-break: break-all; color: #718096; font-size: 14px;">{{ confirmation_url }}</p>
+
+<p>Looking forward to celebrating with you!</p>
+{% endblock %}

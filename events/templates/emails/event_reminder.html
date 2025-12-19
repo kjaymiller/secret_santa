@@ -1,0 +1,41 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Reminder: {{ event_name }} is coming up!{% endblock %}
+
+{% block content %}
+<div class="greeting">
+    Hi {{ participant_name }},
+</div>
+
+<p>This is a friendly reminder that <strong>{{ event_name }}</strong> is coming up soon!</p>
+
+<div class="info-box">
+    <p><strong>Event Details:</strong></p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li><strong>Event Name:</strong> {{ event_name }}</li>
+        <li><strong>Event Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+        {% if budget_max %}
+        <li><strong>Budget:</strong> ${{ budget_max }}</li>
+        {% endif %}
+    </ul>
+</div>
+
+<p><strong>Checklist:</strong></p>
+<ul style="margin: 10px 0; padding-left: 20px;">
+    <li>✓ Have you purchased or prepared your gift?</li>
+    <li>✓ Is your gift wrapped and ready?</li>
+    <li>✓ Do you know how you'll deliver your gift?</li>
+    <li>✓ Have you kept your assignment secret?</li>
+</ul>
+
+{% if custom_message %}
+<div class="info-box">
+    <p><strong>Message from the organizer:</strong></p>
+    <p>{{ custom_message }}</p>
+</div>
+{% endif %}
+
+<p>We hope you're as excited as we are for the big day!</p>
+
+<p>Happy Secret Santa!</p>
+{% endblock %}

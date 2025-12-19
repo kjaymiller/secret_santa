@@ -75,12 +75,12 @@
 
             {% if not participant.is_confirmed %}
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-                    <form method="post" action="{% url 'events:participant-confirm' participant.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn">
-                            Confirm Participation
-                        </button>
-                    </form>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 6px; border-left: 4px solid var(--forest-green);">
+                        <p style="margin: 0; color: var(--charcoal);">
+                            <strong>Confirmation Required</strong><br>
+                            Please check your email ({{ participant.email }}) for a confirmation link to complete your registration.
+                        </p>
+                    </div>
                 </div>
             {% endif %}
         </div>

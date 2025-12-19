@@ -1,0 +1,39 @@
+{% extends "emails/base.html" %}
+
+{% block title %}{{ event_name }} has been cancelled{% endblock %}
+
+{% block content %}
+<div class="greeting">
+    Hi {{ participant_name }},
+</div>
+
+<p>We're writing to inform you that the Secret Santa event <strong>"{{ event_name }}"</strong> has been cancelled by the organizer.</p>
+
+<div class="info-box" style="border-left-color: #e53e3e; background-color: #fff5f5;">
+    <p style="margin: 0;"><strong>Event Cancelled</strong></p>
+    <p style="margin: 10px 0 0 0;">This event will no longer take place and all participant registrations have been removed.</p>
+</div>
+
+<div class="info-box">
+    <p><strong>Event Details:</strong></p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li><strong>Event Name:</strong> {{ event_name }}</li>
+        <li><strong>Scheduled Date:</strong> {{ event_date|date:"F j, Y" }}</li>
+        {% if budget_max %}
+        <li><strong>Budget:</strong> ${{ budget_max }}</li>
+        {% endif %}
+        <li><strong>Organizer:</strong> {{ organizer_name }}</li>
+    </ul>
+</div>
+
+{% if cancellation_message %}
+<div class="info-box">
+    <p><strong>Message from the organizer:</strong></p>
+    <p>{{ cancellation_message }}</p>
+</div>
+{% endif %}
+
+<p>If you have any questions about this cancellation, please contact the event organizer, {{ organizer_name }}{% if organizer_email %} at {{ organizer_email }}{% endif %}.</p>
+
+<p>We hope to see you at a future Secret Santa event!</p>
+{% endblock %}

@@ -102,6 +102,28 @@ $ just manage migrate
 $ just manage createsuperuser
 ```
 
+### Notification Management
+
+```shell
+# Send invites to specific email addresses
+$ just manage send_event_invites <event_id> --emails "email1@example.com,email2@example.com"
+
+# Send invites to all unconfirmed participants
+$ just manage send_event_invites <event_id> --all
+
+# Send invites to all participants (including confirmed)
+$ just manage send_event_invites <event_id> --all --confirmed
+
+# Send assignment notifications to all participants
+$ just manage send_assignment_notifications <event_id>
+
+# Dry run to preview assignment notifications
+$ just manage send_assignment_notifications <event_id> --dry-run
+
+# Test notification configuration
+$ just manage test_notification --email your@email.com --sms +1234567890
+```
+
 ### Testing and Code Quality
 
 ```shell
@@ -214,6 +236,59 @@ CACHE_URL=redis://redis:6379/0
 DEBUG=True
 SECRET_KEY=your-secret-key-here
 ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Twilio SendGrid (Email Notifications)
+SENDGRID_API_KEY=your_sendgrid_api_key_here
+SENDGRID_FROM_EMAIL=noreply@secretsanta.example.com
+SENDGRID_FROM_NAME=Secret Santa
+
+# Twilio SMS (SMS Notifications)
+TWILIO_ACCOUNT_SID=your_twilio_account_sid_here
+TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
+TWILIO_PHONE_NUMBER=+1234567890
+```
+
+### Twilio Configuration
+
+This project uses **Twilio SendGrid** for email notifications and **Twilio SMS** for text message notifications.
+
+#### Setting up Twilio SendGrid (Email)
+
+1. Sign up for a [SendGrid account](https://signup.sendgrid.com/)
+2. Create an API key in the SendGrid dashboard:
+   - Go to Settings > API Keys
+   - Create a new API key with "Full Access" permissions
+   - Copy the API key to `SENDGRID_API_KEY` in your `.env` file
+3. Verify your sender email address:
+   - Go to Settings > Sender Authentication
+   - Verify a single sender email (for development)
+   - Or set up domain authentication (for production)
+4. Set `SENDGRID_FROM_EMAIL` to your verified sender email
+5. Customize `SENDGRID_FROM_NAME` (e.g., "Your Company Secret Santa")
+
+#### Setting up Twilio SMS
+
+1. Sign up for a [Twilio account](https://www.twilio.com/try-twilio)
+2. Get your Account SID and Auth Token from the Twilio Console:
+   - Copy `Account SID` to `TWILIO_ACCOUNT_SID`
+   - Copy `Auth Token` to `TWILIO_AUTH_TOKEN`
+3. Get a Twilio phone number:
+   - In the console, go to Phone Numbers > Manage > Buy a number
+   - Choose a number with SMS capabilities
+   - Copy the phone number to `TWILIO_PHONE_NUMBER` (in E.164 format: +1234567890)
+4. For development, Twilio trial accounts can send SMS to verified phone numbers
+
+#### Testing Notifications
+
+```shell
+# Test email notification
+$ just manage test_notification --email your@email.com
+
+# Test SMS notification
+$ just manage test_notification --sms +1234567890
+
+# Test both
+$ just manage test_notification --email your@email.com --sms +1234567890
 ```
 
 ## Testing
