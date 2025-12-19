@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
 
 from .forms import (
     EventForm,
@@ -16,8 +16,9 @@ from .forms import (
     ParticipantExclusionForm,
     ParticipantJoinForm,
     ParticipantUpdateForm,
+    UserProfileForm,
 )
-from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant
+from .models import Assignment, Event, ExclusionGroup, NotificationSchedule, Participant, UserProfile
 
 
 # Home Page View
@@ -34,6 +35,41 @@ class HomeView(View):
             "active_events": Event.objects.filter(is_active=True).count(),
         }
         return render(request, "home.html", context)
+
+
+# Account Views
+
+
+class AccountView(LoginRequiredMixin, UpdateView):
+    """User account management page."""
+
+    template_name = "events/account.html"
+    form_class = UserProfileForm
+    success_url = reverse_lazy("account")
+
+    def get_object(self):
+        # Ensure user has a profile
+        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        return profile
+
+    def form_valid(self, form):
+        messages.success(self.request, "Notification preferences updated!")
+        return super().form_valid(form)
+
+
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete the current user's account."""
+
+    template_name = "events/account_confirm_delete.html"
+    success_url = reverse_lazy("home")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        user = self.get_object()
+        messages.success(self.request, f"Your account ({user.email}) has been deleted. We're sorry to see you go!")
+        return super().form_valid(form)
 
 
 # Event Views

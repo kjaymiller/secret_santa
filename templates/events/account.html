@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My Account - Secret Santa{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <h1>My Account</h1>
+
+    <div class="account-section">
+        <h2>Profile</h2>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+
+    <div class="account-section">
+        <h2>Security</h2>
+        <p>Manage your password and security settings.</p>
+        <a href="{% url 'account_change_password' %}" class="btn btn-secondary">Change Password</a>
+    </div>
+
+    <!-- Placeholders for future tasks -->
+    <div class="account-section">
+        <h2>Notifications</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.notification_preference.id_for_label }}" class="form-label">{{ form.notification_preference.label }}</label>
+                {{ form.notification_preference }}
+                <div class="form-text">{{ form.notification_preference.help_text }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Preferences</button>
+        </form>
+    </div>
+
+    <div class="account-section danger-zone">
+        <h2>Danger Zone</h2>
+        <p>Delete your account and all data.</p>
+        <a href="{% url 'account-delete' %}" class="btn btn-danger">Delete Account</a>
+    </div>
+</div>
+
+<style>
+    .account-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .account-section h2 {
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    .danger-zone {
+        border: 1px solid var(--deep-red);
+    }
+    .danger-zone h2 {
+        color: var(--deep-red);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Account - Secret Santa{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <h1>Delete Account</h1>
+    
+    <div class="account-section danger-zone">
+        <h2>Are you sure?</h2>
+        <p>This action cannot be undone. This will permanently delete your account and all associated data.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-group">
+                <a href="{% url 'account' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .account-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .danger-zone {
+        border: 1px solid var(--deep-red, #dc3545);
+        color: var(--deep-red, #dc3545);
+    }
+    .danger-zone h2 {
+        color: var(--deep-red, #dc3545);
+    }
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+</style>
+{% endblock %}

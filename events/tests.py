@@ -166,3 +166,43 @@ class EventCreateViewTestCase(TestCase):
         second_participant = second_event.participants.first()
         self.assertEqual(first_participant.user, self.user)
         self.assertEqual(second_participant.user, self.user)
+
+
+class AccountDeleteViewTestCase(TestCase):
+    """Test cases for AccountDeleteView."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpass123",
+            email="testuser@example.com"
+        )
+        self.client.login(username="testuser", password="testpass123")
+
+    def test_account_delete_view_access(self):
+        """Test that the account delete view is accessible for logged-in users."""
+        url = reverse('account-delete')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'events/account_confirm_delete.html')
+
+    def test_account_delete_view_post(self):
+        """Test that posting to the account delete view deletes the user."""
+        user_pk = self.user.pk
+        url = reverse('account-delete')
+        response = self.client.post(url)
+
+        # Should redirect to home
+        self.assertRedirects(response, reverse('home'))
+
+        # User should be deleted
+        self.assertFalse(User.objects.filter(pk=user_pk).exists())
+
+    def test_account_delete_view_requires_login(self):
+        """Test that the account delete view requires login."""
+        self.client.logout()
+        url = reverse('account-delete')
+        response = self.client.get(url)
+
+        # Should redirect to login
+        self.assertRedirects(response, f"/accounts/login/?next={url}")
