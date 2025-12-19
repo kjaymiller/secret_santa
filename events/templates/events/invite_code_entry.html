@@ -3,84 +3,59 @@
 {% block title %}Join an Event - Secret Santa{% endblock %}
 
 {% block content %}
-    <div style="max-width: 600px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--forest-green); font-size: 36px; font-weight: 700; margin-bottom: 12px;">
+    <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-10">
+            <h1 class="text-forest text-4xl font-bold mb-3">
                 Join a Secret Santa Event
             </h1>
-            <p style="color: var(--soft-gray); font-size: 18px;">
+            <p class="text-gray text-lg">
                 Enter the invite code you received from your event organizer
             </p>
         </div>
 
-        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <form method="post">
+        <div class="card p-10">
+            <form method="post" class="invite-code-form">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                    <div class="message error" style="margin-bottom: 20px;">
+                    <div class="message error mb-5">
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
 
-                <div style="margin-bottom: 24px;">
-                    <label for="{{ form.invite_code.id_for_label }}" style="display: block; font-weight: 500; color: var(--charcoal); margin-bottom: 8px; font-size: 16px;">
-                        Invite Code <span style="color: var(--deep-red);">*</span>
+                <div class="mb-6">
+                    <label for="{{ form.invite_code.id_for_label }}" class="block font-medium text-charcoal mb-2 text-base">
+                        Invite Code <span class="text-red">*</span>
                     </label>
                     {{ form.invite_code }}
                     {% if form.invite_code.errors %}
-                        <div style="color: var(--deep-red); font-size: 14px; margin-top: 8px;">
+                        <div class="text-red text-sm mt-2">
                             {{ form.invite_code.errors }}
                         </div>
                     {% endif %}
                     {% if form.invite_code.help_text %}
-                        <p style="color: var(--soft-gray); font-size: 13px; margin-top: 8px;">
+                        <p class="text-gray text-sm mt-2">
                             {{ form.invite_code.help_text }}
                         </p>
                     {% endif %}
                 </div>
 
                 <div>
-                    <button type="submit" class="btn" style="width: 100%; padding: 16px; font-size: 16px;">
+                    <button type="submit" class="btn w-full p-4 text-base">
                         Continue to Event
                     </button>
                 </div>
             </form>
 
-            <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid #eee; text-align: center;">
-                <p style="color: var(--soft-gray); font-size: 14px; margin-bottom: 12px;">
+            <div class="mt-8 pt-8 border-t text-center">
+                <p class="text-gray text-sm mb-3">
                     Don't have an invite code?
                 </p>
-                <p style="color: var(--soft-gray); font-size: 14px;">
+                <p class="text-gray text-sm">
                     Ask your event organizer to share the 8-character code with you, or check your email invitation.
                 </p>
             </div>
         </div>
     </div>
 
-    <style>
-        input[type="text"] {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 18px;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-align: center;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--forest-green);
-        }
-
-        input[type="text"]::placeholder {
-            letter-spacing: normal;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-weight: 400;
-        }
-    </style>
 {% endblock content %}
