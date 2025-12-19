@@ -30,11 +30,23 @@
             </header>
 
             <main>
+                {% if user.is_authenticated %}
+                    {% for email in user.emailaddress_set.all %}
+                        {% if email.primary and not email.verified %}
+                            <div class="banner-warning">
+                                <span>Your email address ({{ email.email }}) is not confirmed.</span>
+                                <a href="{% url 'account_email' %}">Resend confirmation link</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
                 {% if messages %}
                     <div class="messages">
                         {% for message in messages %}
                             <div class="message {{ message.tags }}">
-                                {{ message }}
+                                <span class="message-content">{{ message }}</span>
+                                <button class="message-close">&times;</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -47,6 +59,7 @@
                 <p>&copy; {% now "Y" %} Secret Santa. Spread the joy of giving!</p>
             </footer>
         </div>
+        <script src="{% static 'js/notifications.js' %}"></script>
         {% block extra_js %}{% endblock %}
     </body>
 </html>

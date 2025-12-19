@@ -1,0 +1,33 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Welcome to Secret Santa!{% endblock %}
+
+{% block content %}
+    <div class="greeting">
+        Hi {{ user.get_full_name|default:user.username }},
+    </div>
+
+    <p>Welcome to Secret Santa! We're excited to have you join our community of gift givers.</p>
+
+    <div class="info-box" style="border-left-color: #e53e3e; background-color: #fff5f5;">
+        <p style="margin: 0;"><strong>Action Required: Confirm Your Email</strong></p>
+        <p style="margin: 10px 0 0 0;">Please confirm your email address to get started.</p>
+    </div>
+
+    <p>Confirming your email ensures you receive important notifications about your Secret Santa events and assignments.</p>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="{{ activate_url }}" class="button">
+            Confirm My Account
+        </a>
+    </div>
+
+    <p>If the button above doesn't work, copy and paste this link into your browser:</p>
+    <div style="background: #f3f4f6; padding: 12px; border-radius: 6px; margin: 10px 0;">
+        <code style="color: #374151; word-break: break-all;">{{ activate_url }}</code>
+    </div>
+
+    <p>If you didn't sign up for Secret Santa, you can safely ignore this email.</p>
+
+    <p>Happy Gifting!</p>
+{% endblock content %}

@@ -1,0 +1,12 @@
+Hello {{ user.get_full_name|default:user.username }},
+
+Welcome to Secret Santa! You're just one step away from joining the fun.
+
+Please confirm your email address by clicking the link below:
+
+{{ activate_url }}
+
+If you didn't sign up for Secret Santa, you can safely ignore this email.
+
+Happy Gifting!
+The Secret Santa Team
