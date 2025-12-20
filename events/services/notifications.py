@@ -209,11 +209,26 @@ class NotificationService:
         success = False
 
         try:
-            # Get participants for this event
-            participants = event.participants.filter(is_confirmed=True).select_related("user__profile")
+            # Determine participants based on notification type
+            if notification_type == "registration_reminder":
+                # specific logic for registration reminders: send to unconfirmed participants
+                participants = event.participants.filter(is_confirmed=False).select_related("user__profile")
+            else:
+                # default logic: send to confirmed participants
+                participants = event.participants.filter(is_confirmed=True).select_related("user__profile")
 
             for participant in participants:
                 context["participant_name"] = participant.name
+
+                # For assignment reveal, we need to add assignment details
+                if notification_type == "assignment_reveal":
+                    try:
+                        assignment = event.assignments.get(giver=participant)
+                        context["assignment_name"] = assignment.receiver.name
+                        context["wishlist"] = assignment.receiver.wishlist_markdown or "No wishlist provided yet."
+                    except event.assignments.model.DoesNotExist:
+                        logger.warning(f"No assignment found for giver {participant.name}, skipping assignment notification")
+                        continue
 
                 # Send email if required
                 if delivery_method in ["email", "both"] and self._can_send_email(participant):
@@ -281,6 +296,10 @@ class NotificationService:
             message = context.get("custom_message", f"Update from {event_name}. Check your email for details.")
         else:
             message = f"Notification from {event_name}"
+
+        # Append custom message for non-custom types if provided
+        if notification_type != "custom" and context.get("custom_message"):
+            message = f"{message} {context['custom_message']}"
 
         # Truncate if necessary (shouldn't happen with our predefined messages)
         if len(message) > 160:

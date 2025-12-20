@@ -176,6 +176,30 @@ class TestNotificationService:
         message = notification_service._get_sms_message("custom", context)
         assert len(message) <= 160
 
+    def test_sms_message_with_custom_message_appended(self, notification_service):
+        """Test that custom message is appended to standard SMS messages."""
+        context = {
+            "event_name": "Test Event",
+            "invite_code": "TEST",
+            "event_date": "2025-12-25",
+            "custom_message": "Don't be late!",
+        }
+
+        # Test registration_reminder
+        message = notification_service._get_sms_message("registration_reminder", context)
+        assert "Don't forget to join" in message
+        assert "Don't be late!" in message
+
+        # Test assignment_reveal
+        message = notification_service._get_sms_message("assignment_reveal", context)
+        assert "Your Secret Santa assignment" in message
+        assert "Don't be late!" in message
+
+        # Test custom type (should NOT append, just use the custom message)
+        message = notification_service._get_sms_message("custom", context)
+        assert message == "Don't be late!"
+        assert "Don't be late! Don't be late!" not in message
+
     @patch.object(NotificationService, "send_email_notification")
     @patch.object(NotificationService, "send_sms_notification")
     def test_send_assignment_notification(self, mock_sms, mock_email, notification_service, event, participant):
